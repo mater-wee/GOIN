@@ -1,0 +1,291 @@
+﻿CREDENCE testnet run 2026-11-19T22:23:50
+=== 1. Identities (testnet) ===
+> stellar keys address credence-admin
+    Γ¥î error: invalid signing key or identity name
+  Creating and funding credence-admin
+> stellar keys generate credence-admin --network testnet --fund
+    Γ£à Key saved with alias credence-admin in "C:\\Users\\theresa\\.config\\stellar\\identity\\credence-admin.toml"
+    Γ£à Account credence-admin funded on "Test SDF Network ; September 2015"
+> stellar keys address credence-admin
+    GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP
+> stellar keys address credence-seller
+    Γ¥î error: invalid signing key or identity name
+  Creating and funding credence-seller
+> stellar keys generate credence-seller --network testnet --fund
+    Γ£à Key saved with alias credence-seller in "C:\\Users\\theresa\\.config\\stellar\\identity\\credence-seller.toml"
+    Γ£à Account credence-seller funded on "Test SDF Network ; September 2015"
+> stellar keys address credence-seller
+    GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+> stellar keys address credence-buyer
+    Γ¥î error: invalid signing key or identity name
+  Creating and funding credence-buyer
+> stellar keys generate credence-buyer --network testnet --fund
+    Γ£à Key saved with alias credence-buyer in "C:\\Users\\theresa\\.config\\stellar\\identity\\credence-buyer.toml"
+    Γ£à Account credence-buyer funded on "Test SDF Network ; September 2015"
+> stellar keys address credence-buyer
+    GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+> stellar keys address credence-usdc-issuer
+    Γ¥î error: invalid signing key or identity name
+  Creating and funding credence-usdc-issuer
+> stellar keys generate credence-usdc-issuer --network testnet --fund
+    Γ£à Key saved with alias credence-usdc-issuer in "C:\\Users\\theresa\\.config\\stellar\\identity\\credence-usdc-issuer.toml"
+    Γ£à Account credence-usdc-issuer funded on "Test SDF Network ; September 2015"
+> stellar keys address credence-usdc-issuer
+    GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6
+  admin   GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP
+  seller  GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+  buyer   GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+  issuer  GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6
+
+=== 2. Test USDC ===
+> stellar tx new change-trust --source-account credence-seller --line USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --network testnet
+    Γä╣∩╕Å Signing transaction: 3b0357002e6b0cbe1886a7747bb1afb4f51ac9008c609e113e403567ff0d471a
+  Trustline added for credence-seller
+> stellar tx new change-trust --source-account credence-buyer --line USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --network testnet
+    Γä╣∩╕Å Signing transaction: 8453d59e3f5ab4e54094750aed0f4cde8b6423353663bdd8014b920f65fc45ee
+  Trustline added for credence-buyer
+> stellar contract asset deploy --asset USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --source-account credence-admin --network testnet --alias credence-usdc
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: d9d72dca5dde82c179b1605b550c85abe4ff873cc7ca4df5b16ce05499fca9cc
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/d9d72dca5dde82c179b1605b550c85abe4ff873cc7ca4df5b16ce05499fca9cc
+    ≡ƒöù https://lab.stellar.org/r/testnet/contract/CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+    Γ£à Deployed!
+    CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+  Deployed USDC asset contract
+  USDC contract CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-usdc-issuer --network testnet -- mint --to GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL --amount 1000000000
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: 552d0b5b9a7baa3ab17c45596f7f53e026dcb70d7a1e9c5f2cdf26063767f511
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/552d0b5b9a7baa3ab17c45596f7f53e026dcb70d7a1e9c5f2cdf26063767f511
+    ≡ƒôà CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 - Success - Event: MintWithAmountOnly (mint), to: "GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL", sep0011_asset: "USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6", amount: "1000000000"
+    
+  Minted 100.00 USDC to buyer
+
+=== 3. Build and deploy CREDENCE ===
+> stellar contract build
+    Γä╣∩╕Å CARGO_BUILD_RUSTFLAGS=--remap-path-prefix=C:/Users/theresa/.cargo/registry/src= SOROBAN_SDK_BUILD_SYSTEM_SUPPORTS_SPEC_SHAKING_V2=1 STELLAR_CLI_VERSION=30.0.1 cargo rustc --manifest-path=Cargo.toml --crate-type=cdylib --target=wasm32v1-none --release
+        Finished `release` profile [optimized] target(s) in 0.45s
+    Γä╣∩╕Å Build Summary:
+       Wasm File: target\wasm32v1-none\release\credence.wasm (11534 bytes optimized (original size was 13193 bytes))
+       Wasm Hash: b7380eacbeb98b36b36a221301d10abf4d202e15b00f9a36a717940727ddbf8a
+       Wasm Size: 11534 bytes optimized (original size was 13193 bytes)
+       Exported Functions: 10 found
+         ΓÇó __constructor
+         ΓÇó admin
+         ΓÇó confirm_transfer
+         ΓÇó create_listing
+         ΓÇó get_listing
+         ΓÇó listing_count
+         ΓÇó purchase
+         ΓÇó review_listing
+         ΓÇó start_transfer
+         ΓÇó usdc_token
+    Γ£à Build Complete
+    System.Management.Automation.RemoteException
+> stellar contract deploy --wasm target\wasm32v1-none\release\credence.wasm --source-account credence-admin --network testnet --alias credence -- --admin GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP --usdc_token CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+    Γä╣∩╕Å Uploading contract WASMΓÇª
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: cd8f85eff04f9d12b91c417c51d6d8de7e0bf548ec6d09a919578d5d5f4df70e
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/cd8f85eff04f9d12b91c417c51d6d8de7e0bf548ec6d09a919578d5d5f4df70e
+    Γä╣∩╕Å Deploying contract using wasm hash b7380eacbeb98b36b36a221301d10abf4d202e15b00f9a36a717940727ddbf8a
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: e09dc3d979ee26261a983fdf349ab6e427f3d40c6562fa0e7e18531a3ff348e3
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/e09dc3d979ee26261a983fdf349ab6e427f3d40c6562fa0e7e18531a3ff348e3
+    ≡ƒöù https://lab.stellar.org/r/testnet/contract/CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG
+    Γ£à Deployed!
+    CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG
+  CREDENCE contract CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- admin
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP"
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- usdc_token
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32"
+  OK  contract admin = GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP
+  OK  contract USDC token = CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+
+=== Flow A: transfer succeeds ===
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "0"
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "1000000000"
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-seller --network testnet -- create_listing --seller GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM --ticket_ref 2aef4a59ddfa8b6199ed3fbfc5426a38be96f4d49b60eeb86cf021a27d37e603 --original_price 446400000 --resale_price 446400000
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: f36757e30c77014bff5d0537c32be36d739be4b86a036ddea9e2ef0533e02927
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/f36757e30c77014bff5d0537c32be36d739be4b86a036ddea9e2ef0533e02927
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: ListingCreated (listing_created), listing_id: 1, seller: "GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM", resale_price: "446400000"
+    1
+  1. Seller created listing 1
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 1
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":null,"id":1,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"PendingReview","ticket_ref":"2aef4a59ddfa8b6199ed3fbfc5426a38be96f4d49b60eeb86cf021a27d37e603"}
+  OK  status after create_listing = PendingReview
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- review_listing --listing_id 1 --approved true
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: e0b043adaaf67a86d0b2d852b56a04f30d41c5c6dec93cf6cba4459869e04fb0
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/e0b043adaaf67a86d0b2d852b56a04f30d41c5c6dec93cf6cba4459869e04fb0
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: ListingReviewed (listing_reviewed), listing_id: 1, approved: true
+    null
+  2. Admin approved listing 1
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 1
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":null,"id":1,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"Approved","ticket_ref":"2aef4a59ddfa8b6199ed3fbfc5426a38be96f4d49b60eeb86cf021a27d37e603"}
+  OK  status after review_listing = Approved
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-buyer --network testnet -- purchase --buyer GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL --listing_id 1
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: b6bb2097408c957c0905d911ec4b073a3818deefc68753aaaa6630e682353441
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/b6bb2097408c957c0905d911ec4b073a3818deefc68753aaaa6630e682353441
+    ≡ƒôà CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 - Success - Event: [{"symbol":"transfer"},{"address":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL"},{"address":"CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG"},{"string":"USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6"}] = {"i128":"446400000"}
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: PaymentCommitted (payment_committed), listing_id: 1, buyer: "GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL", amount: "446400000"
+    null
+  3. Buyer paid 44.64 USDC into escrow
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 1
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL","id":1,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"PaymentCommitted","ticket_ref":"2aef4a59ddfa8b6199ed3fbfc5426a38be96f4d49b60eeb86cf021a27d37e603"}
+  OK  status after purchase = PaymentCommitted
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "553600000"
+  OK  buyer balance after purchase = 553600000
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-seller --network testnet -- start_transfer --listing_id 1
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: d843b00f90581364384f738c9e1dcee1c1de9297332d34cbecfa9960f1d46a2e
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/d843b00f90581364384f738c9e1dcee1c1de9297332d34cbecfa9960f1d46a2e
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: TransferInitiated (transfer_initiated), listing_id: 1
+    null
+  4. Seller started the ticket transfer
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 1
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL","id":1,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"TransferInitiated","ticket_ref":"2aef4a59ddfa8b6199ed3fbfc5426a38be96f4d49b60eeb86cf021a27d37e603"}
+  OK  status after start_transfer = TransferInitiated
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- confirm_transfer --listing_id 1 --success true
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: c31276c86e89ce4e61d3a5c5d8cb2926e8a07792bd33f86041c5d9ee5e3c6c4a
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/c31276c86e89ce4e61d3a5c5d8cb2926e8a07792bd33f86041c5d9ee5e3c6c4a
+    ≡ƒôà CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 - Success - Event: [{"symbol":"transfer"},{"address":"CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG"},{"address":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM"},{"string":"USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6"}] = {"i128":"446400000"}
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: Settled (settled), listing_id: 1, seller: "GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM", amount: "446400000"
+    null
+  5. Admin confirmed transfer success = true
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 1
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL","id":1,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"Settled","ticket_ref":"2aef4a59ddfa8b6199ed3fbfc5426a38be96f4d49b60eeb86cf021a27d37e603"}
+  OK  final status = Settled
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "446400000"
+  OK  seller balance after payout = 446400000
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "553600000"
+  OK  buyer balance after payout = 553600000
+
+=== Flow B: transfer fails ===
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "446400000"
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "553600000"
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-seller --network testnet -- create_listing --seller GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM --ticket_ref efa3028c2a74665ddd760525da1081312f96a082c74287c9c4688a0b708e3ec4 --original_price 446400000 --resale_price 446400000
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: 0cab7c9f9bbf428bd953552b11386df24e9b83c5182040a1e1ece3e3f13585a2
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/0cab7c9f9bbf428bd953552b11386df24e9b83c5182040a1e1ece3e3f13585a2
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: ListingCreated (listing_created), listing_id: 2, seller: "GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM", resale_price: "446400000"
+    2
+  1. Seller created listing 2
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 2
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":null,"id":2,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"PendingReview","ticket_ref":"efa3028c2a74665ddd760525da1081312f96a082c74287c9c4688a0b708e3ec4"}
+  OK  status after create_listing = PendingReview
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- review_listing --listing_id 2 --approved true
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: 7d1ba1260eb5fb11a93c04798a488874908da92d809fe5b5cdbe4447e5fb000c
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/7d1ba1260eb5fb11a93c04798a488874908da92d809fe5b5cdbe4447e5fb000c
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: ListingReviewed (listing_reviewed), listing_id: 2, approved: true
+    null
+  2. Admin approved listing 2
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 2
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":null,"id":2,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"Approved","ticket_ref":"efa3028c2a74665ddd760525da1081312f96a082c74287c9c4688a0b708e3ec4"}
+  OK  status after review_listing = Approved
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-buyer --network testnet -- purchase --buyer GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL --listing_id 2
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: e6444a3ba2b66717f841e38acaae3f5989ccc0f3a9ef77cdae3f03a8e90825f2
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/e6444a3ba2b66717f841e38acaae3f5989ccc0f3a9ef77cdae3f03a8e90825f2
+    ≡ƒôà CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 - Success - Event: [{"symbol":"transfer"},{"address":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL"},{"address":"CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG"},{"string":"USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6"}] = {"i128":"446400000"}
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: PaymentCommitted (payment_committed), listing_id: 2, buyer: "GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL", amount: "446400000"
+    null
+  3. Buyer paid 44.64 USDC into escrow
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 2
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL","id":2,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"PaymentCommitted","ticket_ref":"efa3028c2a74665ddd760525da1081312f96a082c74287c9c4688a0b708e3ec4"}
+  OK  status after purchase = PaymentCommitted
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "107200000"
+  OK  buyer balance after purchase = 107200000
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-seller --network testnet -- start_transfer --listing_id 2
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: 3703d9df866a282d6307f9587178f07365527aea367526c137f9f01eaa07a5ec
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/3703d9df866a282d6307f9587178f07365527aea367526c137f9f01eaa07a5ec
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: TransferInitiated (transfer_initiated), listing_id: 2
+    null
+  4. Seller started the ticket transfer
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 2
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL","id":2,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"TransferInitiated","ticket_ref":"efa3028c2a74665ddd760525da1081312f96a082c74287c9c4688a0b708e3ec4"}
+  OK  status after start_transfer = TransferInitiated
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- confirm_transfer --listing_id 2 --success false
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: c91743e90d674c939fec6a98ce290a3860c1f1b0009e462f1bab466f00b323b9
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/c91743e90d674c939fec6a98ce290a3860c1f1b0009e462f1bab466f00b323b9
+    ≡ƒôà CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 - Success - Event: [{"symbol":"transfer"},{"address":"CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG"},{"address":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL"},{"string":"USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6"}] = {"i128":"446400000"}
+    ≡ƒôà CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG - Success - Event: Refunded (refunded), listing_id: 2, buyer: "GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL", amount: "446400000"
+    null
+  5. Admin confirmed transfer success = false
+> stellar contract invoke --id CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG --source-account credence-admin --network testnet -- get_listing --listing_id 2
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    {"buyer":"GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL","id":2,"original_price":"446400000","resale_price":"446400000","seller":"GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM","status":"Refunded","ticket_ref":"efa3028c2a74665ddd760525da1081312f96a082c74287c9c4688a0b708e3ec4"}
+  OK  final status = Refunded
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "446400000"
+  OK  seller balance after refund = 446400000
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-admin --network testnet -- balance --id GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "553600000"
+  OK  buyer balance after refund = 553600000
+
+=== Done: all checks passed ===
+  Contract on Stellar Expert: https://stellar.expert/explorer/testnet/contract/CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG
+  Saved IDs to deployments\testnet.json

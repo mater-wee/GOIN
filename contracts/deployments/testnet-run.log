@@ -1,0 +1,91 @@
+﻿CREDENCE testnet run 2026-11-19T23:55:17
+=== 1. Identities (testnet) ===
+> stellar keys address credence-admin
+    GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP
+> stellar keys address credence-seller
+    GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+> stellar keys address credence-buyer
+    GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+> stellar keys address credence-usdc-issuer
+    GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6
+  deployer GDQ3J5FAWMWFGYAJ7J2WU3SRTAWIMA23F3PIV5BO44WOTLOALPPXDYAP
+  admin   GCOQKGO767TJCUGXT3CUCP6BDIHPTFZVP6DESKVG3KQ75MO5DGE5UFAO
+  seller  GCJH3Z6MF5FU2L7DL7K7EUYX5AW3ECZENXDGTEJG67QPDWGFQUVHJJGM
+  buyer   GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL
+  issuer  GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6
+
+=== 2. Test USDC ===
+> stellar tx new change-trust --source-account credence-seller --line USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --network testnet
+    Γä╣∩╕Å Signing transaction: 5c5673f0e1757304898f4c6edab6aed50df4e5d27248abebcf5b6cad8053880b
+  Trustline added for credence-seller
+> stellar tx new change-trust --source-account credence-buyer --line USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --network testnet
+    Γä╣∩╕Å Signing transaction: 2fe8258eb9f702524453dbd5794dc35afef4e68b83f9de00da596292b7c88f92
+  Trustline added for credence-buyer
+> stellar contract asset deploy --asset USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --source-account credence-admin --network testnet --alias credence-usdc
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γ¥î error: transaction simulation failed: HostError: Error(Storage, ExistingValue)
+  USDC asset contract already exists; looking up its ID
+> stellar contract id asset --asset USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6 --network testnet
+    CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+  USDC contract CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+> stellar contract invoke --id CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 --source-account credence-usdc-issuer --network testnet -- mint --to GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL --amount 1000000000
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: 1765b140134f2d5df18e7e213d1dce42fdbfa272c1bded7bfd90fb6500b81f66
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/1765b140134f2d5df18e7e213d1dce42fdbfa272c1bded7bfd90fb6500b81f66
+    ≡ƒôà CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32 - Success - Event: MintWithAmountOnly (mint), to: "GBDNIA7WGYQQXWS4V3UMXUWZVW6L6SOOOW2ITQ5MXJULVZ4ZTQZ6ZKZL", sep0011_asset: "USDC:GAK5OFCY24HGG2RGGGSOW6ECTEZ2QRJIV4DNWNWB6OH7G6XNCXJXWQD6", amount: "1000000000"
+    
+  Minted 100.00 USDC to buyer
+
+=== 3. Build and deploy CREDENCE ===
+> stellar contract build
+    Γä╣∩╕Å CARGO_BUILD_RUSTFLAGS=--remap-path-prefix=C:/Users/theresa/.cargo/registry/src= SOROBAN_SDK_BUILD_SYSTEM_SUPPORTS_SPEC_SHAKING_V2=1 STELLAR_CLI_VERSION=30.0.1 cargo rustc --manifest-path=Cargo.toml --crate-type=cdylib --target=wasm32v1-none --release
+        Finished `release` profile [optimized] target(s) in 0.55s
+    Γä╣∩╕Å Build Summary:
+       Wasm File: target\wasm32v1-none\release\credence.wasm (11534 bytes optimized (original size was 13193 bytes))
+       Wasm Hash: b7380eacbeb98b36b36a221301d10abf4d202e15b00f9a36a717940727ddbf8a
+       Wasm Size: 11534 bytes optimized (original size was 13193 bytes)
+       Exported Functions: 10 found
+         ΓÇó __constructor
+         ΓÇó admin
+         ΓÇó confirm_transfer
+         ΓÇó create_listing
+         ΓÇó get_listing
+         ΓÇó listing_count
+         ΓÇó purchase
+         ΓÇó review_listing
+         ΓÇó start_transfer
+         ΓÇó usdc_token
+    Γ£à Build Complete
+    System.Management.Automation.RemoteException
+> stellar contract deploy --wasm target\wasm32v1-none\release\credence.wasm --source-account credence-admin --network testnet --alias credence -- --admin GCOQKGO767TJCUGXT3CUCP6BDIHPTFZVP6DESKVG3KQ75MO5DGE5UFAO --usdc_token CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+    Γä╣∩╕Å Uploading contract WASMΓÇª
+    Γä╣∩╕Å Skipping install because wasm already installed
+    Γä╣∩╕Å Deploying contract using wasm hash b7380eacbeb98b36b36a221301d10abf4d202e15b00f9a36a717940727ddbf8a
+    Γä╣∩╕Å Simulating transactionΓÇª
+    Γä╣∩╕Å Signing transaction: 989be1eb87027cbe7abbd4e4f67661647bb4a90d6434d4168be7281442b271d1
+    ≡ƒîÄ Sending transactionΓÇª
+    Γ£à Transaction submitted successfully!
+    ≡ƒöù https://stellar.expert/explorer/testnet/tx/989be1eb87027cbe7abbd4e4f67661647bb4a90d6434d4168be7281442b271d1
+    ≡ƒöù https://lab.stellar.org/r/testnet/contract/CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI
+    Γ£à Deployed!
+    ΓÜá∩╕Å Overwriting existing alias 'credence' that currently links to contract ID: CDCVKHKH3VNKXRM7G5ZJ6CLKZUEK45IISCQZQGIV7P74OTJ25QEB2YGG
+    CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI
+  CREDENCE contract CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI
+> stellar contract invoke --id CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI --source-account credence-admin --network testnet -- admin
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "GCOQKGO767TJCUGXT3CUCP6BDIHPTFZVP6DESKVG3KQ75MO5DGE5UFAO"
+> stellar contract invoke --id CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI --source-account credence-admin --network testnet -- usdc_token
+    Γä╣∩╕Å Simulation identified as read-only. Send by rerunning with `--send=yes`.
+    "CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32"
+  OK  contract admin = GCOQKGO767TJCUGXT3CUCP6BDIHPTFZVP6DESKVG3KQ75MO5DGE5UFAO
+  OK  contract USDC token = CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32
+
+=== Demo flows skipped ===
+  The administrator is an external wallet, so this script can't sign
+  review_listing or confirm_transfer. Run the flow in the web app instead.
+
+=== Done: all checks passed ===
+  Contract on Stellar Expert: https://stellar.expert/explorer/testnet/contract/CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI
+  Saved IDs to deployments\testnet.json
