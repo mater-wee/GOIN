@@ -48,7 +48,7 @@ interface WalletContextValue {
 const WalletContext = createContext<WalletContextValue | null>(null);
 
 // Freighter has no "disconnect" call, so the app remembers the choice locally.
-const DISCONNECTED_KEY = "credence:wallet-disconnected";
+const DISCONNECTED_KEY = "goin:wallet-disconnected";
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [installed, setInstalled] = useState<boolean | null>(null);

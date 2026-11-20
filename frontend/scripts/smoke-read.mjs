@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { contract, Networks } from "@stellar/stellar-sdk";
 
 const raw = readFileSync(new URL("../../contracts/deployments/testnet.json", import.meta.url), "utf8");
-const { credence_contract_id: contractId, admin } = JSON.parse(raw.replace(/^\uFEFF/, ""));
+const { goin_contract_id: contractId, admin } = JSON.parse(raw.replace(/^\uFEFF/, ""));
 
 const client = await contract.Client.from({
   contractId,

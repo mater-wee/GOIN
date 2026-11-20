@@ -1,47 +1,57 @@
 import { useCallback, useEffect, useState } from "react";
+import { fetchPublicListing, fetchPublicListings, type PublicDetails } from "./api";
 import { describeError, fetchAdmin, fetchListing, fetchListings, type Listing, type TxOutcome } from "./contract";
 import { fetchAccountStatus, type AccountStatus } from "./horizon";
-import { getDetails, type TicketDetails } from "./offchain";
+import { useWallet } from "./wallet";
 
 export interface ListingView {
   listing: Listing;
-  details?: TicketDetails;
+  /** Off-chain details from the GOIN server. Missing if it's offline. */
+  details?: PublicDetails;
 }
 
-/** All listings (newest first) merged with their off-chain details. */
+const errorMessage = (r: PromiseSettledResult<unknown>) => (r.status === "rejected" ? describeError(r.reason) : null);
+
+/**
+ * All listings (newest first): the on-chain record from Stellar merged with
+ * the off-chain details from the GOIN server. If the server is down, the
+ * on-chain data still shows and `detailsError` explains why details are missing.
+ */
 export function useListings() {
+  const { address } = useWallet();
   const [listings, setListings] = useState<ListingView[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailsError, setDetailsError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const onChain = await fetchListings();
-      const views = await Promise.all(
-        onChain.map(async (listing) => ({ listing, details: await getDetails(listing.id) })),
-      );
-      setListings(views.reverse());
-    } catch (e) {
-      setError(describeError(e));
-    } finally {
-      setLoading(false);
+    const [chain, details] = await Promise.allSettled([fetchListings(), fetchPublicListings(address)]);
+    if (chain.status === "fulfilled") {
+      const byId = new Map((details.status === "fulfilled" ? details.value : []).map((d) => [d.listingId, d]));
+      setListings(chain.value.map((listing) => ({ listing, details: byId.get(Number(listing.id)) })).reverse());
+    } else {
+      setError(errorMessage(chain));
     }
-  }, []);
+    setDetailsError(errorMessage(details));
+    setLoading(false);
+  }, [address]);
 
   useEffect(() => {
     void reload();
   }, [reload]);
 
-  return { listings, loading, error, reload };
+  return { listings, loading, error, detailsError, reload };
 }
 
 /** One listing with its off-chain details. `view` is null if it doesn't exist. */
 export function useListing(id: bigint | null) {
+  const { address } = useWallet();
   const [view, setView] = useState<ListingView | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailsError, setDetailsError] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
     if (id === null) {
@@ -50,21 +60,21 @@ export function useListing(id: bigint | null) {
     }
     setLoading(true);
     setError(null);
-    try {
-      const listing = await fetchListing(id);
-      setView(listing ? { listing, details: await getDetails(id) } : null);
-    } catch (e) {
-      setError(describeError(e));
-    } finally {
-      setLoading(false);
+    const [chain, details] = await Promise.allSettled([fetchListing(id), fetchPublicListing(id, address)]);
+    if (chain.status === "fulfilled") {
+      setView(chain.value ? { listing: chain.value, details: details.status === "fulfilled" ? details.value ?? undefined : undefined } : null);
+    } else {
+      setError(errorMessage(chain));
     }
-  }, [id]);
+    setDetailsError(errorMessage(details));
+    setLoading(false);
+  }, [id, address]);
 
   useEffect(() => {
     void reload();
   }, [reload]);
 
-  return { view, loading, error, reload };
+  return { view, loading, error, detailsError, reload };
 }
 
 let adminRequest: Promise<string> | null = null;

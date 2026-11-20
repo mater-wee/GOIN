@@ -1,11 +1,10 @@
 import { Link, useParams } from "react-router";
 import { AccountChecklist, accountReady } from "../components/AccountChecklist";
-import { EvidencePreview } from "../components/EvidencePreview";
+import { ReviewPanel } from "../components/ReviewPanel";
 import { StatusTimeline } from "../components/StatusTimeline";
 import { EmptyState, ExternalLink, Spinner, StatusBadge, TxFeedback } from "../components/ui";
-import { CREDENCE_CONTRACT_ID } from "../config";
-import { credence, submit, type Listing, type TxOutcome } from "../lib/contract";
-import type { TicketDetails } from "../lib/offchain";
+import { GOIN_CONTRACT_ID } from "../config";
+import { goin, submit, type Listing, type TxOutcome } from "../lib/contract";
 import { accountUrl, contractUrl, formatEventDate, shortAddress } from "../lib/format";
 import { useAccountStatus, useAction, useAdmin, useListing } from "../lib/hooks";
 import { formatPhp, formatUsdc } from "../lib/money";
@@ -17,7 +16,7 @@ function parseId(raw: string | undefined): bigint | null {
 
 export function ListingPage() {
   const id = parseId(useParams().id);
-  const { view, loading, error, reload } = useListing(id);
+  const { view, loading, error, detailsError, reload } = useListing(id);
 
   if (loading) return <Spinner label="Loading listing from Stellar…" />;
   if (error) return <p className="notice notice-bad">{error}</p>;
@@ -75,8 +74,8 @@ export function ListingPage() {
           </dl>
         ) : (
           <p className="notice notice-info">
-            Ticket details are stored off-chain and aren't available in this browser. The on-chain record below is still
-            authoritative.
+            {detailsError ?? "This listing has no ticket details on the GOIN server."} The on-chain record below is
+            still authoritative.
           </p>
         )}
 
@@ -113,7 +112,7 @@ export function ListingPage() {
           <div>
             <dt>Contract</dt>
             <dd>
-              <ExternalLink href={contractUrl(CREDENCE_CONTRACT_ID)}>{shortAddress(CREDENCE_CONTRACT_ID)}</ExternalLink>
+              <ExternalLink href={contractUrl(GOIN_CONTRACT_ID)}>{shortAddress(GOIN_CONTRACT_ID)}</ExternalLink>
             </dd>
           </div>
         </dl>
@@ -125,7 +124,7 @@ export function ListingPage() {
           <StatusTimeline status={listing.status.tag} />
         </div>
         <ActionPanel listing={listing} onDone={() => void reload()} />
-        <AdminPanel listing={listing} evidence={details?.evidence} onDone={() => void reload()} />
+        <AdminPanel listing={listing} onDone={() => void reload()} />
       </aside>
     </div>
   );
@@ -163,7 +162,7 @@ function ActionPanel({ listing, onDone }: { listing: Listing; onDone: () => void
     ) : (
       <>
         <p>
-          Pay <strong>{formatUsdc(listing.resale_price)}</strong>. The USDC is held by the CREDENCE contract and only
+          Pay <strong>{formatUsdc(listing.resale_price)}</strong>. The USDC is held by the GOIN contract and only
           released to the seller after the ticket transfer is confirmed. If it fails, you get a full refund.
         </p>
         <AccountChecklist
@@ -176,7 +175,7 @@ function ActionPanel({ listing, onDone }: { listing: Listing; onDone: () => void
         <button
           className="btn btn-primary btn-large"
           disabled={!ready || action.busy || !wallet.onTestnet}
-          onClick={() => void run(() => submit(credence(me).purchase({ buyer: me, listing_id: listing.id })))}
+          onClick={() => void run(() => submit(goin(me).purchase({ buyer: me, listing_id: listing.id })))}
         >
           {action.busy ? "Waiting for Freighter…" : `Buy for ${formatUsdc(listing.resale_price)}`}
         </button>
@@ -184,8 +183,13 @@ function ActionPanel({ listing, onDone }: { listing: Listing; onDone: () => void
     );
   } else if (status === "Approved" && isSeller) {
     body = <p>Your ticket is live. You'll be notified here when a buyer pays.</p>;
-  } else if (status === "PendingReview" && isSeller) {
-    body = <p>Your listing is waiting for an administrator to review your purchase evidence.</p>;
+  } else if (status === "PendingReview" && isSeller && me) {
+    body = (
+      <>
+        <p>Your listing is waiting for an administrator to review your purchase evidence. This is what they'll see:</p>
+        <ReviewPanel address={me} listingId={listing.id} />
+      </>
+    );
   } else if (status === "PaymentCommitted" && isSeller) {
     body = (
       <>
@@ -197,7 +201,7 @@ function ActionPanel({ listing, onDone }: { listing: Listing; onDone: () => void
         <button
           className="btn btn-primary"
           disabled={action.busy || !wallet.onTestnet}
-          onClick={() => void run(() => submit(credence(listing.seller).start_transfer({ listing_id: listing.id })))}
+          onClick={() => void run(() => submit(goin(listing.seller).start_transfer({ listing_id: listing.id })))}
         >
           {action.busy ? "Waiting for Freighter…" : "I've started the ticket transfer"}
         </button>
@@ -228,15 +232,7 @@ function ActionPanel({ listing, onDone }: { listing: Listing; onDone: () => void
 }
 
 /** Administrator review and transfer confirmation for this listing. */
-function AdminPanel({
-  listing,
-  evidence,
-  onDone,
-}: {
-  listing: Listing;
-  evidence?: TicketDetails["evidence"];
-  onDone: () => void;
-}) {
+function AdminPanel({ listing, onDone }: { listing: Listing; onDone: () => void }) {
   const wallet = useWallet();
   const admin = useAdmin();
   const action = useAction();
@@ -246,7 +242,7 @@ function AdminPanel({
   const run = async (fn: () => Promise<TxOutcome<null>>) => {
     if (await action.run(fn)) onDone();
   };
-  const client = credence(admin);
+  const client = goin(admin);
   const id = listing.id;
 
   let body = null;
@@ -254,7 +250,7 @@ function AdminPanel({
     body = (
       <>
         <p>Check the purchase evidence matches the event, category, and original price.</p>
-        <EvidencePreview evidence={evidence} />
+        <ReviewPanel address={admin} listingId={id} />
         <div className="actions">
           <button className="btn btn-primary" disabled={action.busy} onClick={() => void run(() => submit(client.review_listing({ listing_id: id, approved: true })))}>
             Approve

@@ -72,7 +72,7 @@ export function AccountChecklist({ address, status, onChanged, requiredUsdc, pur
     step = (
       <>
         <p>
-          You have {formatUsdc(status.usdc)} but this ticket costs {formatUsdc(requiredUsdc)}. On testnet, the CREDENCE
+          You have {formatUsdc(status.usdc)} but this ticket costs {formatUsdc(requiredUsdc)}. On testnet, the GOIN
           admin can send you test USDC with:
         </p>
         <code className="code-block">scripts\mint-test-usdc.ps1 -To {address}</code>

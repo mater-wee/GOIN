@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import { contract, Keypair, Networks } from "@stellar/stellar-sdk";
 
 const raw = readFileSync(new URL("../../contracts/deployments/testnet.json", import.meta.url), "utf8");
-const { credence_contract_id: contractId } = JSON.parse(raw.replace(/^\uFEFF/, ""));
+const { goin_contract_id: contractId } = JSON.parse(raw.replace(/^\uFEFF/, ""));
 
 const seller = Keypair.random();
 const fund = await fetch(`https://friendbot.stellar.org?addr=${seller.publicKey()}`);

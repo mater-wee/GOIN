@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::{Credence, CredenceClient, Error, ListingStatus};
+    use crate::{Goin, GoinClient, Error, ListingStatus};
     use soroban_sdk::{
         testutils::Address as _,
         token::{StellarAssetClient, TokenClient},
@@ -14,7 +14,7 @@ mod tests {
 
     struct Setup {
         env: Env,
-        client: CredenceClient<'static>,
+        client: GoinClient<'static>,
         usdc: TokenClient<'static>,
         admin: Address,
         seller: Address,
@@ -22,7 +22,7 @@ mod tests {
     }
 
     /// Creates the environment, a mock USDC asset, funds the buyer, and deploys
-    /// CREDENCE with an administrator.
+    /// GOIN with an administrator.
     fn setup() -> Setup {
         let env = Env::default();
         env.mock_all_auths();
@@ -38,8 +38,8 @@ mod tests {
         StellarAssetClient::new(&env, &usdc_address).mint(&buyer, &BUYER_START_BALANCE);
         let usdc = TokenClient::new(&env, &usdc_address);
 
-        let contract_id = env.register(Credence, (&admin, &usdc_address));
-        let client = CredenceClient::new(&env, &contract_id);
+        let contract_id = env.register(Goin, (&admin, &usdc_address));
+        let client = GoinClient::new(&env, &contract_id);
 
         Setup {
             env,

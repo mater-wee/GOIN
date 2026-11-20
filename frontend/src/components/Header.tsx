@@ -15,9 +15,9 @@ export function Header() {
         <div className="container header-inner">
           <NavLink to="/" className="brand">
             <span className="brand-mark" aria-hidden>
-              C
+              G
             </span>
-            CREDENCE
+            GOIN
           </NavLink>
           <nav className="nav">
             <NavLink to="/" end>
@@ -62,7 +62,7 @@ function WalletBanner() {
   if (installed === false) {
     message = (
       <>
-        CREDENCE uses the Freighter wallet. <ExternalLink href="https://www.freighter.app">Install Freighter</ExternalLink>{" "}
+        GOIN uses the Freighter wallet. <ExternalLink href="https://www.freighter.app">Install Freighter</ExternalLink>{" "}
         and reload this page.
       </>
     );

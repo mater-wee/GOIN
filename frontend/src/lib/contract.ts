@@ -1,18 +1,18 @@
 import type { AssembledTransaction, Result } from "@stellar/stellar-sdk/contract";
-import { Client, type Listing } from "../contracts/credence";
-import { CREDENCE_CONTRACT_ID, NETWORK } from "../config";
+import { Client, type Listing } from "../contracts/goin";
+import { GOIN_CONTRACT_ID, NETWORK } from "../config";
 import { signWithFreighter } from "./wallet";
 
 export type { Listing };
 export type ListingStatusTag = Listing["status"]["tag"];
 
 /**
- * Typed CREDENCE client. Pass the connected wallet address for calls that
+ * Typed GOIN client. Pass the connected wallet address for calls that
  * must be signed; omit it for read-only calls, which are only simulated.
  */
-export function credence(publicKey?: string): Client {
+export function goin(publicKey?: string): Client {
   return new Client({
-    contractId: CREDENCE_CONTRACT_ID,
+    contractId: GOIN_CONTRACT_ID,
     networkPassphrase: NETWORK.passphrase,
     rpcUrl: NETWORK.rpcUrl,
     publicKey,
@@ -29,7 +29,7 @@ const CONTRACT_ERRORS: Record<string, string> = {
   "Prices must be greater than zero.": "Prices must be greater than zero.",
   "Resale price is above the original ticket price (fair-price cap).":
     "The resale price cannot be higher than the original ticket price.",
-  "This ticket reference has already been listed.": "This ticket has already been listed on CREDENCE.",
+  "This ticket reference has already been listed.": "This ticket has already been listed on GOIN.",
   "The listing is not in the status this action requires.":
     "This action isn't allowed at the listing's current stage. Refresh the page and try again.",
   "A seller cannot buy their own listing.": "You can't buy your own listing.",
@@ -73,13 +73,13 @@ export async function submit<T>(build: Promise<AssembledTransaction<Result<T, Er
 // ----------------------------- Read-only calls -----------------------------
 
 export async function fetchListing(id: bigint): Promise<Listing | null> {
-  const result = (await credence().get_listing({ listing_id: id })).result;
+  const result = (await goin().get_listing({ listing_id: id })).result;
   return result.isOk() ? result.unwrap() : null;
 }
 
 /** Loads every listing. The contract numbers listings 1..listing_count. */
 export async function fetchListings(): Promise<Listing[]> {
-  const client = credence();
+  const client = goin();
   const count = Number((await client.listing_count()).result);
   const ids = Array.from({ length: count }, (_, i) => BigInt(i + 1));
   const txs = await Promise.all(ids.map((id) => client.get_listing({ listing_id: id })));
@@ -87,5 +87,5 @@ export async function fetchListings(): Promise<Listing[]> {
 }
 
 export async function fetchAdmin(): Promise<string> {
-  return (await credence().admin()).result;
+  return (await goin().admin()).result;
 }

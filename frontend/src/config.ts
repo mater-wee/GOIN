@@ -11,8 +11,8 @@ export const NETWORK = {
   explorerUrl: "https://stellar.expert/explorer/testnet",
 };
 
-export const CREDENCE_CONTRACT_ID =
-  env.VITE_CREDENCE_CONTRACT_ID ?? "CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI";
+export const GOIN_CONTRACT_ID =
+  env.VITE_GOIN_CONTRACT_ID ?? "CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI";
 
 /** Test USDC issued for the demo by contracts/scripts/deploy-testnet.ps1. */
 export const USDC_ASSET = {

@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link } from "react-router";
+import { isSignedIn, retryPendingDrafts } from "../lib/api";
 import { AccountChecklist } from "../components/AccountChecklist";
 import { ListingCard } from "../components/ListingCard";
 import { EmptyState, ExternalLink, Spinner } from "../components/ui";
@@ -13,7 +14,16 @@ const SELLER_TODO = new Set(["PaymentCommitted"]);
 export function ActivityPage() {
   const wallet = useWallet();
   const account = useAccountStatus(wallet.address);
-  const { listings, loading, error, reload } = useListings();
+  const { listings, loading, error, detailsError, reload } = useListings();
+
+  // Link any listing created on-chain whose details weren't saved (e.g. the tab was closed mid-way).
+  useEffect(() => {
+    const address = wallet.address;
+    if (!address || !isSignedIn(address)) return;
+    void retryPendingDrafts(address).then((linked) => {
+      if (linked) void reload();
+    });
+  }, [wallet.address, reload]);
 
   if (!wallet.address) {
     return (
@@ -52,6 +62,7 @@ export function ActivityPage() {
       </div>
 
       {error && <p className="notice notice-bad">{error}</p>}
+      {detailsError && <p className="notice notice-info">{detailsError}</p>}
       {loading ? (
         <Spinner />
       ) : (

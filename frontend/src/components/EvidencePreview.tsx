@@ -1,29 +1,25 @@
 import { useEffect, useState } from "react";
-import type { TicketDetails } from "../lib/offchain";
 
-/** Shows the seller's uploaded purchase evidence (image inline, PDF as a link). */
-export function EvidencePreview({ evidence }: { evidence?: TicketDetails["evidence"] }) {
+/** Shows purchase evidence fetched from the server (image inline, PDF as a link). */
+export function EvidencePreview({ blob, name }: { blob: Blob; name: string }) {
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!evidence) return;
-    const objectUrl = URL.createObjectURL(evidence.blob);
+    const objectUrl = URL.createObjectURL(blob);
     setUrl(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [evidence]);
+  }, [blob]);
 
-  if (!evidence) return <p className="muted small">No purchase evidence available in this browser.</p>;
   if (!url) return null;
-
   return (
     <div className="evidence">
-      {evidence.type.startsWith("image/") ? (
+      {blob.type.startsWith("image/") ? (
         <a href={url} target="_blank" rel="noreferrer">
-          <img src={url} alt={`Purchase evidence: ${evidence.name}`} />
+          <img src={url} alt={`Purchase evidence: ${name}`} />
         </a>
       ) : (
         <a className="btn btn-ghost btn-small" href={url} target="_blank" rel="noreferrer">
-          Open {evidence.name}
+          Open {name}
         </a>
       )}
     </div>

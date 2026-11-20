@@ -1,18 +1,18 @@
 <#
 .SYNOPSIS
-  Deploys CREDENCE to Stellar testnet and runs the MVP flow end to end.
+  Deploys GOIN to Stellar testnet and runs the MVP flow end to end.
 
 .DESCRIPTION
   1. Creates and funds testnet identities: admin, seller, buyer, and a test
      USDC issuer. Existing identities are reused.
   2. Issues a test USDC asset, adds USDC trustlines for the seller and buyer,
      wraps the asset in a Stellar Asset Contract, and mints 100 USDC to the buyer.
-  3. Builds and deploys the CREDENCE contract.
+  3. Builds and deploys the GOIN contract.
   4. Runs two demo transactions:
        A. Transfer succeeds  -> seller receives 44.64 USDC.
        B. Transfer fails     -> buyer is refunded 44.64 USDC.
      The demo needs the admin's signature, so it only runs when the admin is
-     the local credence-admin identity. With -Admin set to another wallet
+     the local goin-admin identity. With -Admin set to another wallet
      (e.g. a Freighter account), the script deploys and skips the demo.
   5. Writes contract IDs and public addresses to deployments/<network>.json.
      The previous deployment file and log are kept as *.previous.*.
@@ -29,7 +29,7 @@
 #>
 param(
     [string]$Network = "testnet",
-    # Administrator address. Defaults to the local credence-admin identity.
+    # Administrator address. Defaults to the local goin-admin identity.
     [string]$Admin = "",
     [switch]$SkipBuild
 )
@@ -47,7 +47,7 @@ $DeploymentFile = Join-Path $DeployDir "$Network.json"
 # Keep the previous deployment record instead of silently overwriting it.
 if (Test-Path $DeploymentFile) { Copy-Item $DeploymentFile (Join-Path $DeployDir "$Network.previous.json") -Force }
 if (Test-Path $LogFile) { Copy-Item $LogFile (Join-Path $DeployDir "$Network-run.previous.log") -Force }
-Set-Content -Path $LogFile -Value "CREDENCE $Network run $(Get-Date -Format s)" -Encoding UTF8
+Set-Content -Path $LogFile -Value "GOIN $Network run $(Get-Date -Format s)" -Encoding UTF8
 
 # 44.64 USDC (7 decimals). Matches the P2,500 example in the idea document.
 $TicketPrice = "446400000"
@@ -94,18 +94,18 @@ function Get-Identity([string]$Name) {
     }
 }
 
-function Invoke-Credence([string]$Source, [string[]]$FnArgs) {
-    $cli = @("contract", "invoke", "--id", $script:CredenceId, "--source-account", $Source, "--network", $Network, "--") + $FnArgs
+function Invoke-Goin([string]$Source, [string[]]$FnArgs) {
+    $cli = @("contract", "invoke", "--id", $script:GoinId, "--source-account", $Source, "--network", $Network, "--") + $FnArgs
     return Invoke-Stellar $cli
 }
 
 function Get-UsdcBalance([string]$Address) {
-    $raw = Invoke-Stellar @("contract", "invoke", "--id", $script:UsdcId, "--source-account", "credence-admin", "--network", $Network, "--", "balance", "--id", $Address)
+    $raw = Invoke-Stellar @("contract", "invoke", "--id", $script:UsdcId, "--source-account", "goin-admin", "--network", $Network, "--", "balance", "--id", $Address)
     return [decimal]($raw.Trim('"'))
 }
 
 function Get-ListingStatus([string]$ListingId) {
-    $json = Invoke-Credence "credence-admin" @("get_listing", "--listing_id", $ListingId)
+    $json = Invoke-Goin "goin-admin" @("get_listing", "--listing_id", $ListingId)
     return ($json | ConvertFrom-Json).status
 }
 
@@ -135,25 +135,25 @@ function Invoke-ResaleFlow([string]$Label, [bool]$TransferSucceeds) {
     $sellerBefore = Get-UsdcBalance $Seller
     $buyerBefore = Get-UsdcBalance $Buyer
 
-    $id = Invoke-Credence "credence-seller" @("create_listing", "--seller", $Seller, "--ticket_ref", $ticketRef, "--original_price", $TicketPrice, "--resale_price", $TicketPrice)
+    $id = Invoke-Goin "goin-seller" @("create_listing", "--seller", $Seller, "--ticket_ref", $ticketRef, "--original_price", $TicketPrice, "--resale_price", $TicketPrice)
     Write-Log "  1. Seller created listing $id"
     Assert-Equal "PendingReview" (Get-ListingStatus $id) "status after create_listing"
 
-    Invoke-Credence "credence-admin" @("review_listing", "--listing_id", $id, "--approved", "true") | Out-Null
+    Invoke-Goin "goin-admin" @("review_listing", "--listing_id", $id, "--approved", "true") | Out-Null
     Write-Log "  2. Admin approved listing $id"
     Assert-Equal "Approved" (Get-ListingStatus $id) "status after review_listing"
 
-    Invoke-Credence "credence-buyer" @("purchase", "--buyer", $Buyer, "--listing_id", $id) | Out-Null
+    Invoke-Goin "goin-buyer" @("purchase", "--buyer", $Buyer, "--listing_id", $id) | Out-Null
     Write-Log "  3. Buyer paid $(Format-Usdc $TicketPrice) into escrow"
     Assert-Equal "PaymentCommitted" (Get-ListingStatus $id) "status after purchase"
     Assert-Equal ($buyerBefore - [decimal]$TicketPrice) (Get-UsdcBalance $Buyer) "buyer balance after purchase"
 
-    Invoke-Credence "credence-seller" @("start_transfer", "--listing_id", $id) | Out-Null
+    Invoke-Goin "goin-seller" @("start_transfer", "--listing_id", $id) | Out-Null
     Write-Log "  4. Seller started the ticket transfer"
     Assert-Equal "TransferInitiated" (Get-ListingStatus $id) "status after start_transfer"
 
     $successArg = if ($TransferSucceeds) { "true" } else { "false" }
-    Invoke-Credence "credence-admin" @("confirm_transfer", "--listing_id", $id, "--success", $successArg) | Out-Null
+    Invoke-Goin "goin-admin" @("confirm_transfer", "--listing_id", $id, "--success", $successArg) | Out-Null
     Write-Log "  5. Admin confirmed transfer success = $successArg"
 
     if ($TransferSucceeds) {
@@ -170,18 +170,18 @@ function Invoke-ResaleFlow([string]$Label, [bool]$TransferSucceeds) {
 
 try {
     Write-Log "=== 1. Identities ($Network) ==="
-    # credence-admin always deploys and pays fees. It is also the contract
+    # goin-admin always deploys and pays fees. It is also the contract
     # administrator unless -Admin names another wallet.
-    $Deployer = Get-Identity "credence-admin"
+    $Deployer = Get-Identity "goin-admin"
     if (-not $Admin) {
         $Admin = $Deployer
     } elseif ($Admin -notmatch '^G[A-Z2-7]{55}$') {
         throw "-Admin '$Admin' is not a Stellar account address (G...)."
     }
     $RunDemo = ($Admin -eq $Deployer)
-    $Seller = Get-Identity "credence-seller"
-    $Buyer = Get-Identity "credence-buyer"
-    $Issuer = Get-Identity "credence-usdc-issuer"
+    $Seller = Get-Identity "goin-seller"
+    $Buyer = Get-Identity "goin-buyer"
+    $Issuer = Get-Identity "goin-usdc-issuer"
     Write-Log "  deployer $Deployer"
     Write-Log "  admin   $Admin"
     Write-Log "  seller  $Seller"
@@ -191,29 +191,29 @@ try {
     Write-Log ""
     Write-Log "=== 2. Test USDC ==="
     $Asset = "USDC:$Issuer"
-    foreach ($who in @("credence-seller", "credence-buyer")) {
+    foreach ($who in @("goin-seller", "goin-buyer")) {
         Invoke-Stellar @("tx", "new", "change-trust", "--source-account", $who, "--line", $Asset, "--network", $Network) | Out-Null
         Write-Log "  Trustline added for $who"
     }
     try {
-        $script:UsdcId = Invoke-Stellar @("contract", "asset", "deploy", "--asset", $Asset, "--source-account", "credence-admin", "--network", $Network, "--alias", "credence-usdc")
+        $script:UsdcId = Invoke-Stellar @("contract", "asset", "deploy", "--asset", $Asset, "--source-account", "goin-admin", "--network", $Network, "--alias", "goin-usdc")
         Write-Log "  Deployed USDC asset contract"
     } catch {
         Write-Log "  USDC asset contract already exists; looking up its ID"
         $script:UsdcId = Invoke-Stellar @("contract", "id", "asset", "--asset", $Asset, "--network", $Network)
     }
     Write-Log "  USDC contract $UsdcId"
-    Invoke-Stellar @("contract", "invoke", "--id", $UsdcId, "--source-account", "credence-usdc-issuer", "--network", $Network, "--", "mint", "--to", $Buyer, "--amount", $BuyerMint) | Out-Null
+    Invoke-Stellar @("contract", "invoke", "--id", $UsdcId, "--source-account", "goin-usdc-issuer", "--network", $Network, "--", "mint", "--to", $Buyer, "--amount", $BuyerMint) | Out-Null
     Write-Log "  Minted $(Format-Usdc $BuyerMint) to buyer"
 
     Write-Log ""
-    Write-Log "=== 3. Build and deploy CREDENCE ==="
+    Write-Log "=== 3. Build and deploy GOIN ==="
     if (-not $SkipBuild) { Invoke-Stellar @("contract", "build") | Out-Null }
-    $Wasm = "target\wasm32v1-none\release\credence.wasm"
-    $script:CredenceId = Invoke-Stellar @("contract", "deploy", "--wasm", $Wasm, "--source-account", "credence-admin", "--network", $Network, "--alias", "credence", "--", "--admin", $Admin, "--usdc_token", $UsdcId)
-    Write-Log "  CREDENCE contract $CredenceId"
-    $storedAdmin = (Invoke-Credence "credence-admin" @("admin")).Trim('"')
-    $storedToken = (Invoke-Credence "credence-admin" @("usdc_token")).Trim('"')
+    $Wasm = "target\wasm32v1-none\release\goin.wasm"
+    $script:GoinId = Invoke-Stellar @("contract", "deploy", "--wasm", $Wasm, "--source-account", "goin-admin", "--network", $Network, "--alias", "goin", "--", "--admin", $Admin, "--usdc_token", $UsdcId)
+    Write-Log "  GOIN contract $GoinId"
+    $storedAdmin = (Invoke-Goin "goin-admin" @("admin")).Trim('"')
+    $storedToken = (Invoke-Goin "goin-admin" @("usdc_token")).Trim('"')
     Assert-Equal $Admin $storedAdmin "contract admin"
     Assert-Equal $UsdcId $storedToken "contract USDC token"
 
@@ -231,7 +231,7 @@ try {
 
     $deployment = [ordered]@{
         network              = $Network
-        credence_contract_id = $CredenceId
+        goin_contract_id = $GoinId
         usdc_contract_id     = $UsdcId
         usdc_asset           = $Asset
         admin                = $Admin
@@ -247,7 +247,7 @@ try {
 
     Write-Log ""
     Write-Log "=== Done: all checks passed ==="
-    Write-Log "  Contract on Stellar Expert: https://stellar.expert/explorer/$Network/contract/$CredenceId"
+    Write-Log "  Contract on Stellar Expert: https://stellar.expert/explorer/$Network/contract/$GoinId"
     Write-Log "  Saved IDs to deployments\$Network.json"
     exit 0
 } catch {

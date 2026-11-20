@@ -18,13 +18,20 @@ export function ListingCard({ view }: { view: ListingView }) {
           {formatEventDate(details.eventDate)} · {details.venue}
         </p>
       ) : (
-        <p className="muted">Ticket details are not available in this browser.</p>
+        <p className="muted">Ticket details aren't available right now.</p>
       )}
       <div className="listing-card-price">
         <strong>{formatUsdc(listing.resale_price)}</strong>
         {details && <span className="muted">{formatPhp(details.resalePricePhp)}</span>}
       </div>
       <p className="muted small">Seller {shortAddress(listing.seller)}</p>
+      {details?.issueCount !== undefined && listing.status.tag === "PendingReview" && (
+        <p className={`small ${details.issueCount ? "issue-flag" : "issue-clear"}`}>
+          {details.issueCount
+            ? `⚠ ${details.issueCount} receipt check${details.issueCount === 1 ? "" : "s"} to review`
+            : "✓ Receipt matches the listing"}
+        </p>
+      )}
     </Link>
   );
 }

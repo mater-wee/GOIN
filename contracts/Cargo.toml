@@ -1,8 +1,8 @@
 [package]
-name = "credence"
+name = "goin"
 version = "0.1.0"
 edition = "2021"
-description = "CREDENCE: protected peer-to-peer ticket resale with USDC escrow on Stellar Soroban"
+description = "GOIN: protected peer-to-peer ticket resale with USDC escrow on Stellar Soroban"
 license = "MIT"
 publish = false
 

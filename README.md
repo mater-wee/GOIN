@@ -1,4 +1,4 @@
-# CREDENCE
+# GOIN
 
 Protected peer-to-peer ticket resale for Filipino concertgoers, using USDC payments held by a Soroban smart contract until the ticket transfer is confirmed.
 
@@ -8,7 +8,7 @@ Students and young professionals in Metro Manila who can no longer attend concer
 
 ## Solution
 
-CREDENCE lets ticket sellers list eligible tickets and lets buyers purchase them through a protected transaction workflow. Buyers pay in USDC on Stellar. A Soroban smart contract records the listing, holds the payment, records the transfer confirmation, and then releases the payment to the seller or refunds the buyer.
+GOIN lets ticket sellers list eligible tickets and lets buyers purchase them through a protected transaction workflow. Buyers pay in USDC on Stellar. A Soroban smart contract records the listing, holds the payment, records the transfer confirmation, and then releases the payment to the seller or refunds the buyer.
 
 ### MVP transaction
 
@@ -32,9 +32,9 @@ CREDENCE lets ticket sellers list eligible tickets and lets buyers purchase them
 
 Filipino concertgoers who buy resold tickets through informal Facebook groups and direct bank or e-wallet transfers have no protection if the other side cheats. Buyers lose money to fake sellers, and honest sellers deal with buyers who never pay.
 
-CREDENCE aims to make secondary ticket sales safe and fair:
+GOIN aims to make secondary ticket sales safe and fair:
 
-- **Safe:** the buyer's money is held by the contract, not by the seller or by CREDENCE, until the transfer is confirmed.
+- **Safe:** the buyer's money is held by the contract, not by the seller or by GOIN, until the transfer is confirmed.
 - **Fair:** the contract rejects any resale price above the original ticket price, so scalping is blocked by code.
 - **Transparent:** every listing, payment, payout, and refund is a public Stellar transaction. Independent event organizers can see resale activity for their events.
 
@@ -44,7 +44,7 @@ Its differentiator is the combination of fair resale pricing and protected peer-
 
 ## Stellar Features Used
 
-| Feature | How CREDENCE uses it |
+| Feature | How GOIN uses it |
 |---|---|
 | **USDC transfers** | Buyers pay for tickets in USDC. Sellers receive USDC after a confirmed transfer. Buyers are refunded in USDC if the transfer fails. |
 | **Soroban smart contracts** | Record listings, payment commitments, transfer confirmations, payouts, and refunds. Enforce the price cap and block duplicate listings. |
@@ -59,34 +59,43 @@ Not used in the MVP: custom tokens (USDC is enough), the built-in DEX (currency 
 | 1. Smart contract | Soroban contract, 5 unit tests, Wasm build | Done |
 | 2. Testnet deployment | Deploy script, test USDC, full payout and refund flows on testnet | Done |
 | 3. Web app | Seller, administrator, and buyer screens with Freighter wallet connection | Done |
-| 4. Off-chain backend | Shared database and file storage for ticket details and evidence (the web app currently keeps them in the browser) | Next |
-| 5. AI-assisted OCR | Extract event details from uploaded receipts and flag missing or inconsistent fields | Planned (bonus) |
-| 6. Demo and pitch | End-to-end demo on testnet | Planned |
+| 4. Off-chain backend | Database and file storage for ticket details and evidence, wallet sign-in, `ticket_ref` computed and verified on-chain | Done |
+| 5. AI-assisted OCR | Reads receipts, fills in the listing form, and flags missing or inconsistent details for the seller and administrator | Done (bonus) |
+| 6. Demo and pitch | End-to-end demo on testnet | Next |
 
 ## Smart Contract
 
 ### Project structure
 
 ```
-CREDENCE/
+GOIN/
 ├── README.md
 ├── contracts/
 │   ├── Cargo.toml
 │   ├── src/
-│   │   ├── lib.rs                 # the CREDENCE contract
+│   │   ├── lib.rs                 # the GOIN contract
 │   │   └── test.rs                # 5 unit tests
 │   ├── scripts/
 │   │   ├── deploy-testnet.ps1     # deploy and run the MVP flow on testnet
 │   │   └── mint-test-usdc.ps1     # send test USDC to a wallet
 │   └── deployments/
 │       └── testnet.json           # deployed contract IDs and addresses
-└── frontend/                      # React web app (see "Web App" below)
-    ├── src/
-    │   ├── contracts/credence/    # generated typed contract client
-    │   ├── lib/                   # wallet, contract, Horizon, off-chain storage
-    │   ├── components/
-    │   └── pages/                 # Tickets, Listing, Sell, My activity, Admin
-    └── scripts/                   # client generator and testnet smoke tests
+├── frontend/                      # React web app (see "Web App" below)
+│   ├── src/
+│   │   ├── contracts/goin/    # generated typed contract client
+│   │   ├── lib/                   # wallet, contract, Horizon, backend API client
+│   │   ├── components/
+│   │   └── pages/                 # Tickets, Listing, Sell, My activity, Admin
+│   └── scripts/                   # client generator and testnet smoke tests
+├── server/                        # backend (see "Backend and AI Receipt Reading")
+│   ├── src/
+│   │   ├── routes.ts              # REST API
+│   │   ├── auth.ts                # wallet sign-in (SEP-53)
+│   │   ├── tickets.ts             # validation, ticket_ref, price conversion
+│   │   └── ocr/                   # OCR, rule-based and AI extraction, checks
+│   └── scripts/                   # SEP-53 and end-to-end API tests
+└── samples/
+    └── sample-receipt.png         # fictional receipt for demos
 ```
 
 ### Functions
@@ -136,10 +145,11 @@ Tested with these versions:
 | Wasm target | `wasm32v1-none` | `rustup target add wasm32v1-none` |
 | Stellar CLI | 30.0.1 | `cargo install --locked stellar-cli` |
 | soroban-sdk | 29.0.1 | Pulled in by `Cargo.toml` |
+| Node.js | 24.20 (22.18 or later) | https://nodejs.org (for the web app and backend) |
 
 The Stellar CLI was formerly called the Soroban CLI. The `soroban` command was renamed to `stellar`, so `soroban contract build` is now `stellar contract build`.
 
-All commands below run from the `contracts` folder.
+The contract commands below run from the `contracts` folder.
 
 ## Build
 
@@ -147,7 +157,7 @@ All commands below run from the `contracts` folder.
 stellar contract build
 ```
 
-Output: `target/wasm32v1-none/release/credence.wasm` (about 11.5 KB).
+Output: `target/wasm32v1-none/release/goin.wasm` (about 11.5 KB).
 
 ## Test
 
@@ -171,7 +181,7 @@ Runs 5 tests:
 powershell -ExecutionPolicy Bypass -File scripts\deploy-testnet.ps1
 ```
 
-The script creates and funds testnet accounts, issues a test USDC token, deploys CREDENCE, runs both the payout flow and the refund flow, and checks balances and statuses at every step. It saves the IDs to `deployments/testnet.json` and logs every transaction to `deployments/testnet-run.log`. The previous deployment file and log are kept as `*.previous.*`.
+The script creates and funds testnet accounts, issues a test USDC token, deploys GOIN, runs both the payout flow and the refund flow, and checks balances and statuses at every step. It saves the IDs to `deployments/testnet.json` and logs every transaction to `deployments/testnet-run.log`. The previous deployment file and log are kept as `*.previous.*`.
 
 To make your own wallet (for example a Freighter account) the administrator, pass its address:
 
@@ -179,7 +189,7 @@ To make your own wallet (for example a Freighter account) the administrator, pas
 powershell -ExecutionPolicy Bypass -File scripts\deploy-testnet.ps1 -Admin <YOUR_WALLET_ADDRESS>
 ```
 
-The script can't sign for an external wallet, so it deploys and skips the demo flows. Run the flow in the web app instead. After any redeploy, update `CREDENCE_CONTRACT_ID` in `frontend/src/config.ts` (or set `VITE_CREDENCE_CONTRACT_ID` in `frontend/.env.local`).
+The script can't sign for an external wallet, so it deploys and skips the demo flows. Run the flow in the web app instead. After any redeploy, update `GOIN_CONTRACT_ID` in `frontend/src/config.ts` (or set `VITE_GOIN_CONTRACT_ID` in `frontend/.env.local`).
 
 ### Option B: manual commands
 
@@ -195,14 +205,14 @@ The script can't sign for an external wallet, so it deploys and skips the demo f
    stellar contract asset deploy --asset USDC:<ISSUER_ADDRESS> --source-account admin --network testnet
    ```
 
-3. Deploy CREDENCE. The values after `--` are passed to the constructor:
+3. Deploy GOIN. The values after `--` are passed to the constructor:
 
    ```
    stellar contract deploy \
-     --wasm target/wasm32v1-none/release/credence.wasm \
+     --wasm target/wasm32v1-none/release/goin.wasm \
      --source-account admin \
      --network testnet \
-     --alias credence \
+     --alias goin \
      -- \
      --admin <ADMIN_ADDRESS> \
      --usdc_token <USDC_CONTRACT_ID>
@@ -214,7 +224,7 @@ The script can't sign for an external wallet, so it deploys and skips the demo f
 
 | Item | Value |
 |---|---|
-| CREDENCE contract | `CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI` |
+| GOIN contract | `CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI` |
 | Administrator | `GCOQKGO767TJCUGXT3CUCP6BDIHPTFZVP6DESKVG3KQ75MO5DGE5UFAO` |
 | Test USDC contract | `CARMCC5OAHU7HX6BDWWAYIZ7R6O7VBDRIWIPHJ7ALP2U6WNS745IOQ32` |
 | Wasm hash | `b7380eacbeb98b36b36a221301d10abf4d202e15b00f9a36a717940727ddbf8a` |
@@ -276,22 +286,30 @@ The app also handles testnet wallet setup: funding a new wallet with Friendbot a
 
 ### Run it
 
-Requires Node.js 20 or later and the [Freighter](https://www.freighter.app) browser extension set to **Testnet**.
+Requires Node.js 22.18 or later (for the backend) and the [Freighter](https://www.freighter.app) browser extension set to **Testnet**. Run the backend and the web app in two terminals:
 
 ```
+# Terminal 1: backend on http://localhost:8787
+cd server
+npm install
+npm start
+```
+
+```
+# Terminal 2: web app on http://localhost:5173
 cd frontend
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173. On Windows PowerShell, if `npm` is blocked by the script execution policy, use `npm.cmd` instead.
+Open http://localhost:5173. The web app forwards `/api` requests to the backend. On Windows PowerShell, if `npm` is blocked by the script execution policy, use `npm.cmd` instead.
 
 Other commands:
 
 | Command | What it does |
 |---|---|
 | `npm run build` | Type-checks and builds to `frontend/dist` |
-| `npm run generate:contract` | Regenerates `src/contracts/credence` from the contract ID in `contracts/deployments/testnet.json`. Run it after redeploying the contract. |
+| `npm run generate:contract` | Regenerates `src/contracts/goin` from the contract ID in `contracts/deployments/testnet.json`. Run it after redeploying the contract. |
 | `node scripts/smoke-read.mjs` | Reads every listing from testnet the same way the app does |
 | `node scripts/smoke-write.mjs` | Creates one listing with a throwaway account and checks the duplicate and price-cap errors |
 
@@ -300,13 +318,13 @@ Other commands:
 The administrator is your own Freighter wallet `GCOQKGO7…UFAO`. The deploy script created ready-to-use seller and buyer accounts. Import them into Freighter (Add account → Import with secret key). Print a secret key with:
 
 ```
-stellar keys secret credence-seller
+stellar keys secret goin-seller
 ```
 
-Do the same for `credence-buyer`. These are testnet-only keys; never use them on mainnet. (`credence-admin` now only deploys contracts and pays their fees. It is not the administrator of the current contract.)
+Do the same for `goin-buyer`. These are testnet-only keys; never use them on mainnet. (`goin-admin` now only deploys contracts and pays their fees. It is not the administrator of the current contract.)
 
-1. **Seller** account → **Sell**: fill in the ticket, upload a receipt screenshot, submit, and approve in Freighter.
-2. **Admin** account → **Admin** → open the listing → check the evidence → **Approve**.
+1. **Seller** account → **Sell**: upload `samples/sample-receipt.png`. Freighter asks you to sign in once (a free signature, not a transaction), then the form fills itself from the receipt. Check the details, submit, and approve the transaction in Freighter.
+2. **Admin** account → **Admin** → open the listing → review the evidence and the receipt check → **Approve**.
 3. **Buyer** account → **Tickets** → open the ticket → **Buy**. The USDC moves into the contract.
 4. **Seller** account → open the listing → **I've started the ticket transfer**.
 5. **Admin** account → open the listing → **Succeeded · pay seller** (or **Failed · refund buyer**).
@@ -317,7 +335,67 @@ Every step links to the transaction on Stellar Expert. To give a new Freighter w
 powershell -ExecutionPolicy Bypass -File scripts\mint-test-usdc.ps1 -To <WALLET_ADDRESS>
 ```
 
-**MVP limitation:** ticket details and evidence are stored in the browser (IndexedDB), not on a server. Switching Freighter accounts in the same browser works for the demo, but a different browser or device only sees the on-chain data. Step 4 of the timeline (off-chain backend) replaces this.
+To show a mismatch in the demo, change the original price to ₱2,800 before submitting. GOIN warns that the receipt shows ₱2,500, and the administrator sees the same warning.
+
+## Backend and AI Receipt Reading
+
+The backend in `server/` (Node.js, Express, built-in SQLite) holds everything that must stay off-chain: ticket details, order numbers, and purchase evidence. The contract only ever sees the `ticket_ref` hash, prices, addresses, and status.
+
+### How a listing is created
+
+1. The seller signs in by signing a one-time message in Freighter ([SEP-53](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0053.md)). It's free and is not a transaction.
+2. The seller uploads the receipt. The backend reads it and suggests values for the form (step 6, below).
+3. The seller submits. The backend validates the details, checks the file's real type, computes `ticket_ref`, compares the details with the receipt, and stores a draft.
+4. The seller signs `create_listing` with that `ticket_ref`.
+5. The backend links the draft to the listing only after checking on Stellar that the seller, `ticket_ref`, and prices match. Nobody can attach details to someone else's listing. Drafts that never reach the chain are deleted after 24 hours.
+
+### AI-assisted receipt reading (step 6)
+
+| Stage | What happens |
+|---|---|
+| Read | Images go through OCR ([Tesseract.js](https://github.com/naptha/tesseract.js), runs locally). PDFs use their text layer. |
+| Extract | Built-in rules find the event, event date (not the order date), venue, category, seat, order number, and ticket price (not the total with fees). |
+| AI (optional) | If an AI provider is configured, it extracts the same fields from the OCR text and its answers take priority. Only text is sent, never the image. |
+| Check | The details the seller entered are compared with the receipt. Mismatches and missing details are shown to the seller before submitting, and to the administrator during review. |
+
+The receipt reader suggests and flags; it does not decide. The administrator still approves or rejects, and a match does not prove a ticket is real or transferable.
+
+To turn on AI extraction, copy `server/.env.example` to `server/.env` and set `LLM_BASE_URL`, `LLM_API_KEY`, and `LLM_MODEL` for any OpenAI-compatible API. Without them, OCR and the built-in rules are used, with no cost and no data leaving the server.
+
+**Step-by-step instructions** for viewing, backing up, and resetting the database, and for choosing and connecting an AI provider (Gemini, Groq, OpenAI, or Ollama on your own PC), are in [docs/DATABASE_AND_AI.md](docs/DATABASE_AND_AI.md).
+
+### Who can see what
+
+| Data | Anyone | Seller | Administrator |
+|---|---|---|---|
+| Event, date, venue, category, seat, prices | ✓ | ✓ | ✓ |
+| Order number, receipt check results | | ✓ | ✓ |
+| Purchase evidence file | | ✓ | ✓ |
+
+The administrator is whoever the contract's `admin()` returns, read from Stellar.
+
+### API
+
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| POST | `/api/auth/challenge`, `/api/auth/verify` | | Wallet sign-in |
+| POST | `/api/ocr` | Signed in | Read a receipt and suggest form values |
+| POST | `/api/drafts` | Signed in | Submit details and evidence; returns `ticket_ref` and checks |
+| POST | `/api/drafts/:id/confirm` | Seller | Link the draft to its on-chain listing |
+| GET | `/api/listings`, `/api/listings/:id` | | Public ticket details |
+| GET | `/api/listings/:id/review`, `/api/listings/:id/evidence` | Seller or admin | Checks, OCR result, and the evidence file |
+
+### Backend tests
+
+```
+cd server
+npm run typecheck
+npm run test:sep53      # sign-in signatures against the official SEP-53 test vectors
+```
+
+`npm run test:api` runs the whole flow (sign-in, OCR of the sample receipt, draft, on-chain listing, confirm, and access control) against a separate test contract, so it never touches the real one. It needs `TEST_CONTRACT_ID` set to a contract whose admin is `goin-admin`.
+
+Data lives in `server/data/` (the SQLite database and evidence files), which is not committed. For a real launch, move evidence to private cloud storage, run the backend behind HTTPS, and back up the database.
 
 ## License
 
@@ -326,7 +404,7 @@ This project is licensed under the MIT License.
 ```
 MIT License
 
-Copyright (c) 2026 CREDENCE
+Copyright (c) 2026 GOIN
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

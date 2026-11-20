@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-  Sends test USDC to a testnet wallet so it can buy tickets in the CREDENCE demo.
+  Sends test USDC to a testnet wallet so it can buy tickets in the GOIN demo.
 
 .DESCRIPTION
-  Mints the demo USDC asset (issued by credence-usdc-issuer) to any testnet
+  Mints the demo USDC asset (issued by goin-usdc-issuer) to any testnet
   address. The wallet must already have a USDC trustline; the web app's
   "Add USDC trustline" button creates one.
 
@@ -26,7 +26,7 @@ $ContractsDir = Split-Path -Parent $PSScriptRoot
 $deployment = Get-Content (Join-Path $ContractsDir "deployments\$Network.json") -Raw | ConvertFrom-Json
 $units = [string][int64]($Amount * 10000000)
 
-& stellar contract invoke --id $deployment.usdc_contract_id --source-account credence-usdc-issuer --network $Network -- mint --to $To --amount $units
+& stellar contract invoke --id $deployment.usdc_contract_id --source-account goin-usdc-issuer --network $Network -- mint --to $To --amount $units
 if ($LASTEXITCODE -ne 0) { throw "Mint failed. Make sure the wallet is funded and has a USDC trustline." }
 
 Write-Host "Minted $Amount test USDC to $To"

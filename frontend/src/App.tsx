@@ -1,7 +1,7 @@
 import { Link, Route, Routes } from "react-router";
 import { Header } from "./components/Header";
 import { EmptyState, ExternalLink } from "./components/ui";
-import { CREDENCE_CONTRACT_ID } from "./config";
+import { GOIN_CONTRACT_ID } from "./config";
 import { contractUrl } from "./lib/format";
 import { ActivityPage } from "./pages/ActivityPage";
 import { AdminPage } from "./pages/AdminPage";
@@ -32,8 +32,8 @@ export function App() {
       </main>
       <footer className="footer">
         <div className="container">
-          CREDENCE · Stellar testnet demo · Contract{" "}
-          <ExternalLink href={contractUrl(CREDENCE_CONTRACT_ID)}>{CREDENCE_CONTRACT_ID.slice(0, 8)}…</ExternalLink> · Test
+          GOIN · Stellar testnet demo · Contract{" "}
+          <ExternalLink href={contractUrl(GOIN_CONTRACT_ID)}>{GOIN_CONTRACT_ID.slice(0, 8)}…</ExternalLink> · Test
           USDC has no real value.
         </div>
       </footer>

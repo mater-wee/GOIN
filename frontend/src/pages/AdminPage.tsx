@@ -19,7 +19,7 @@ export function AdminPage() {
         <h1>Administrator</h1>
         <div className="card">
           <p>
-            Only the CREDENCE administrator can review listings and confirm transfers. Connect the administrator wallet{" "}
+            Only the GOIN administrator can review listings and confirm transfers. Connect the administrator wallet{" "}
             <ExternalLink href={accountUrl(admin)}>{shortAddress(admin)}</ExternalLink> in Freighter.
           </p>
           {!wallet.address && (

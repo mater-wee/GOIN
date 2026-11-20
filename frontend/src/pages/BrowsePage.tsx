@@ -1,19 +1,19 @@
 import { Link } from "react-router";
 import { ListingCard } from "../components/ListingCard";
 import { EmptyState, ExternalLink, Spinner } from "../components/ui";
-import { CREDENCE_CONTRACT_ID } from "../config";
+import { GOIN_CONTRACT_ID } from "../config";
 import { contractUrl } from "../lib/format";
 import { useListings } from "../lib/hooks";
 
 const STEPS = [
-  { title: "Seller lists", text: "Upload proof of purchase. Resale price can't exceed the original price." },
-  { title: "Admin verifies", text: "CREDENCE checks the evidence before the ticket goes live." },
+  { title: "Seller lists", text: "Upload the receipt and GOIN reads the details. Resale price can't exceed the original." },
+  { title: "Admin verifies", text: "GOIN checks the evidence before the ticket goes live." },
   { title: "Buyer pays USDC", text: "Payment is held by a Soroban smart contract, not by the seller." },
   { title: "Transfer confirmed", text: "Seller is paid after the transfer succeeds. If it fails, the buyer is refunded." },
 ];
 
 export function BrowsePage() {
-  const { listings, loading, error, reload } = useListings();
+  const { listings, loading, error, detailsError, reload } = useListings();
   const available = listings.filter((v) => v.listing.status.tag === "Approved");
 
   return (
@@ -53,12 +53,13 @@ export function BrowsePage() {
           </button>
         </div>
         {error && <p className="notice notice-bad">{error}</p>}
+        {detailsError && <p className="notice notice-info">{detailsError}</p>}
         {loading ? (
           <Spinner label="Loading tickets from Stellar…" />
         ) : available.length === 0 ? (
           <EmptyState title="No tickets available right now">
             <p className="muted">
-              Have a ticket you can't use? <Link to="/sell">List it on CREDENCE</Link>.
+              Have a ticket you can't use? <Link to="/sell">List it on GOIN</Link>.
             </p>
           </EmptyState>
         ) : (
@@ -69,8 +70,8 @@ export function BrowsePage() {
           </div>
         )}
         <p className="muted small footnote">
-          Listings are read directly from the CREDENCE contract{" "}
-          <ExternalLink href={contractUrl(CREDENCE_CONTRACT_ID)}>on Stellar testnet</ExternalLink>.
+          Listings are read directly from the GOIN contract{" "}
+          <ExternalLink href={contractUrl(GOIN_CONTRACT_ID)}>on Stellar testnet</ExternalLink>.
         </p>
       </section>
     </>

@@ -757,3 +757,121 @@ code,
     overflow-x: auto;
   }
 }
+
+/* Receipt reading and checks (steps 5 and 6) */
+.hint-ai {
+  color: var(--good);
+}
+
+.hint-warn {
+  color: var(--warn);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.card-warn {
+  border-color: #f3d9a8;
+  background: #fffaf0;
+  box-shadow: none;
+}
+
+.checks {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.check {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  font-size: 0.9rem;
+}
+
+.check-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.check-ok .check-icon {
+  background: var(--good);
+}
+
+.check-warn .check-icon {
+  background: var(--warn);
+}
+
+.check-missing .check-icon {
+  background: var(--muted);
+}
+
+.review {
+  margin: 0.75rem 0;
+}
+
+.review h4 {
+  margin-top: 1rem;
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
+.compare th,
+.compare td {
+  text-align: left;
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.compare thead th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.ocr-text {
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem;
+  font-size: 0.78rem;
+}
+
+.issue-flag {
+  color: var(--warn);
+  font-weight: 600;
+  margin: 0;
+}
+
+.issue-clear {
+  color: var(--good);
+  margin: 0;
+}

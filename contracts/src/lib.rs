@@ -1,4 +1,4 @@
-//! CREDENCE: protected peer-to-peer ticket resale on Stellar.
+//! GOIN: protected peer-to-peer ticket resale on Stellar.
 //!
 //! MVP flow implemented by this contract:
 //! 1. Seller creates a listing (`create_listing`). The resale price may not exceed
@@ -168,10 +168,10 @@ pub struct Refunded {
 // ---------------------------------------------------------------------------
 
 #[contract]
-pub struct Credence;
+pub struct Goin;
 
 #[contractimpl]
-impl Credence {
+impl Goin {
     /// Runs once at deployment. Sets the administrator and the USDC token
     /// contract. Using a constructor means nobody can front-run initialization.
     pub fn __constructor(env: Env, admin: Address, usdc_token: Address) {

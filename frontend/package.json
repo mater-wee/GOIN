@@ -1,8 +1,8 @@
 {
-  "name": "credence-web",
+  "name": "goin-web",
   "private": true,
   "version": "0.1.0",
-  "description": "CREDENCE web app: protected ticket resale with USDC escrow on Stellar",
+  "description": "GOIN web app: protected ticket resale with USDC escrow on Stellar",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,7 +14,6 @@
   "dependencies": {
     "@stellar/freighter-api": "^6.0.1",
     "@stellar/stellar-sdk": "^17.4.0",
-    "idb-keyval": "^6.3.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router": "^7.18.6"
