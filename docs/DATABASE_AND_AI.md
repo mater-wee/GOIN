@@ -18,7 +18,7 @@ Everything is in `server/data/`. Git ignores this folder, so the data is never c
 |---|---|
 | `server/data/goin.db` | The database. `goin.db-wal` and `goin.db-shm` next to it are SQLite's working files and belong with it. |
 | `server/data/evidence/` | Uploaded receipts, saved under random file names |
-| `server/data/tesseract/` | The OCR language model, downloaded once (about 10 MB) |
+| `server/data/tesseract/` | The OCR language model, downloaded once (`eng.traineddata`, about 5 MB) |
 
 ### Tables
 
