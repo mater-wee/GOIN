@@ -23,6 +23,19 @@ export const config = {
   rpcUrl: env.RPC_URL ?? "https://soroban-testnet.stellar.org",
   networkPassphrase: env.NETWORK_PASSPHRASE ?? Networks.TESTNET,
   dataDir: resolve(env.DATA_DIR ?? join(serverDir, "data")),
+  /**
+   * Web app addresses allowed to call this API from a browser (CORS), comma separated,
+   * e.g. "https://goin.vercel.app". Not needed locally, where Vite proxies /api.
+   */
+  allowedOrigins: (env.ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((o) => o.trim().replace(/\/+$/, ""))
+    .filter(Boolean),
+  /**
+   * How many proxies sit in front of the server, so rate limiting sees each visitor's
+   * real address. Set TRUST_PROXY=1 on Railway or Render. Locally only Vite's proxy is trusted.
+   */
+  trustProxy: /^\d+$/.test(env.TRUST_PROXY ?? "") ? Number(env.TRUST_PROXY) : (env.TRUST_PROXY ?? "loopback"),
   /** How long a wallet sign-in stays valid. */
   sessionMs: 12 * 60 * 60 * 1000,
   challengeMs: 5 * 60 * 1000,

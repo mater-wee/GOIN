@@ -10,12 +10,31 @@ import { api } from "./routes.ts";
 
 const app = express();
 app.disable("x-powered-by");
-// The Vite dev server proxies /api from localhost; trust it for req.ip.
-app.set("trust proxy", "loopback");
+// Locally, only Vite's proxy is trusted. When hosted, TRUST_PROXY counts the host's proxies.
+app.set("trust proxy", config.trustProxy);
 
 app.use((_req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "no-referrer");
+  next();
+});
+
+// CORS: when the web app is hosted on another domain (e.g. Vercel), only the
+// addresses in ALLOWED_ORIGINS may call the API from a browser.
+app.use("/api", (req, res, next) => {
+  const origin = req.headers.origin;
+  const allowed = !!origin && config.allowedOrigins.includes(origin);
+  if (allowed) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type");
+    res.setHeader("Access-Control-Max-Age", "600");
+  }
+  res.setHeader("Vary", "Origin");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(allowed ? 204 : 403);
+    return;
+  }
   next();
 });
 app.use(express.json({ limit: "20kb" }));
