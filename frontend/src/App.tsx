@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from "react-router";
 import { Header } from "./components/Header";
+import { Starfield } from "./components/Starfield";
 import { EmptyState, ExternalLink } from "./components/ui";
 import { GOIN_CONTRACT_ID } from "./config";
 import { contractUrl } from "./lib/format";
@@ -12,6 +13,7 @@ import { SellPage } from "./pages/SellPage";
 export function App() {
   return (
     <div className="app">
+      <Starfield />
       <Header />
       <main className="container main">
         <Routes>

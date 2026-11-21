@@ -1,8 +1,27 @@
 import { NavLink } from "react-router";
 import { useAdmin } from "../lib/hooks";
 import { shortAddress } from "../lib/format";
+import { useTheme } from "../lib/theme";
 import { useWallet } from "../lib/wallet";
 import { ExternalLink } from "./ui";
+
+/** Switches between light and dark mode. Shows the mode you'll switch to. */
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const next = theme === "dark" ? "light" : "dark";
+  return (
+    <button
+      type="button"
+      className="btn btn-ghost btn-small theme-toggle"
+      onClick={toggle}
+      aria-label={`Switch to ${next} mode`}
+      title={`Switch to ${next} mode`}
+    >
+      <span aria-hidden>{theme === "dark" ? "☀" : "☾"}</span>
+      <span className="theme-toggle-label">{theme === "dark" ? "Light" : "Dark"}</span>
+    </button>
+  );
+}
 
 export function Header() {
   const wallet = useWallet();
@@ -27,6 +46,7 @@ export function Header() {
             <NavLink to="/activity">My activity</NavLink>
             {isAdmin && <NavLink to="/admin">Admin</NavLink>}
           </nav>
+          <ThemeToggle />
           <WalletButton />
         </div>
       </header>
