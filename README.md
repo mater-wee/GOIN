@@ -2,9 +2,11 @@
 
 Protected peer-to-peer ticket resale for Filipino concertgoers, using USDC payments held by a Soroban smart contract until the ticket transfer is confirmed.
 
+**Live on Stellar testnet:** https://goin-three.vercel.app (needs the [Freighter](https://www.freighter.app) wallet set to Testnet). Backend health check: https://goin-server.onrender.com/api/health
+
 ## Problem
 
-Students and young professionals in Metro Manila who can no longer attend concerts or events often resell their tickets through Facebook groups. This exposes buyers to fake or duplicated tickets and overpriced listings, and exposes sellers to unpaid transactions and fraudulent buyers.
+Students and young professionals in Metro Manila who can no longer attend concerts or events often resell their tickets on social media (Facebook groups, X, Instagram, TikTok and group chats) and get paid by bank or e-wallet transfer. This exposes buyers to fake or duplicated tickets and overpriced listings, and exposes sellers to unpaid transactions and fraudulent buyers.
 
 ## Solution
 
@@ -30,7 +32,7 @@ GOIN lets ticket sellers list eligible tickets and lets buyers purchase them thr
 
 ## Vision and Purpose
 
-Filipino concertgoers who buy resold tickets through informal Facebook groups and direct bank or e-wallet transfers have no protection if the other side cheats. Buyers lose money to fake sellers, and honest sellers deal with buyers who never pay.
+Filipino concertgoers who buy resold tickets through social media and direct bank or e-wallet transfers have no protection if the other side cheats. Buyers lose money to fake sellers, and honest sellers deal with buyers who never pay.
 
 GOIN aims to make secondary ticket sales safe and fair:
 
@@ -61,7 +63,10 @@ Not used in the MVP: custom tokens (USDC is enough), the built-in DEX (currency 
 | 3. Web app | Seller, administrator, and buyer screens with Freighter wallet connection | Done |
 | 4. Off-chain backend | Database and file storage for ticket details and evidence, wallet sign-in, `ticket_ref` computed and verified on-chain | Done |
 | 5. AI-assisted OCR | Reads receipts, fills in the listing form, and flags missing or inconsistent details for the seller and administrator | Done (bonus) |
-| 6. Demo and pitch | End-to-end demo on testnet | Next |
+| 6. Public testnet deployment | Web app on Vercel, backend on Render (free plan) | Done |
+| 7. Interface redesign | Midnight Galaxy interface with three themes (Midnight Galaxy, Cloud Lavender, Graphite), GOIN logo, motion with reduced-motion support | Done |
+| 8. Demo and pitch | End-to-end demo on testnet | Next |
+| 9. Instawards sprint | Buyer protection, persistent hosting, self-service onboarding, outside testers (see [Roadmap](#roadmap)) | Proposed |
 
 ## Smart Contract
 
@@ -81,12 +86,15 @@ GOIN/
 │   └── deployments/
 │       └── testnet.json           # deployed contract IDs and addresses
 ├── frontend/                      # React web app (see "Web App" below)
+│   ├── public/                    # GOIN logo and favicons
 │   ├── src/
-│   │   ├── contracts/goin/    # generated typed contract client
-│   │   ├── lib/                   # wallet, contract, Horizon, backend API client
+│   │   ├── contracts/goin/        # generated typed contract client
+│   │   ├── lib/                   # wallet, contract, Horizon, backend API client, themes, motion
 │   │   ├── components/
-│   │   └── pages/                 # Tickets, Listing, Sell, My activity, Admin
-│   └── scripts/                   # client generator and testnet smoke tests
+│   │   ├── pages/                 # Tickets, Listing, Sell, My activity, Admin
+│   │   └── styles/                # design tokens (three themes), base, components, hero, motion
+│   ├── scripts/                   # client generator and testnet smoke tests
+│   └── vercel.json                # single-page app routing on Vercel
 ├── server/                        # backend (see "Backend and AI Receipt Reading")
 │   ├── src/
 │   │   ├── routes.ts              # REST API
@@ -94,6 +102,9 @@ GOIN/
 │   │   ├── tickets.ts             # validation, ticket_ref, price conversion
 │   │   └── ocr/                   # OCR, rule-based and AI extraction, checks
 │   └── scripts/                   # SEP-53 and end-to-end API tests
+├── docs/
+│   ├── DATABASE_AND_AI.md         # database and AI provider guide
+│   └── GOIN-SOW.pdf               # Instawards Statement of Work (also .docx and .html)
 └── samples/
     └── sample-receipt.png         # fictional receipt for demos
 ```
@@ -284,6 +295,8 @@ A React + TypeScript app (Vite) in `frontend/` that runs the full MVP flow in th
 
 The app also handles testnet wallet setup: funding a new wallet with Friendbot and adding the USDC trustline through Freighter.
 
+The interface comes in three themes, picked from the switcher in the header and remembered in the browser: **Midnight Galaxy** (the default, dark with a starfield), **Cloud Lavender** (light) and **Graphite** (dark, neutral). It works on desktop and phone, and animations are turned off when the system asks for reduced motion.
+
 ### Run it
 
 Requires Node.js 22.18 or later (for the backend) and the [Freighter](https://www.freighter.app) browser extension set to **Testnet**. Run the backend and the web app in two terminals:
@@ -395,7 +408,59 @@ npm run test:sep53      # sign-in signatures against the official SEP-53 test ve
 
 `npm run test:api` runs the whole flow (sign-in, OCR of the sample receipt, draft, on-chain listing, confirm, and access control) against a separate test contract, so it never touches the real one. It needs `TEST_CONTRACT_ID` set to a contract whose admin is `goin-admin`.
 
-Data lives in `server/data/` (the SQLite database and evidence files), which is not committed. For a real launch, move evidence to private cloud storage, run the backend behind HTTPS, and back up the database.
+Data lives in `server/data/` (the SQLite database and evidence files), which is not committed. Set `DATA_DIR` to store it elsewhere. For a real launch, move evidence to private cloud storage and back up the database.
+
+## Deployment
+
+The live app runs on two free hosting services. Both redeploy automatically when `main` is pushed to GitHub.
+
+### Web app on Vercel
+
+| Setting | Value |
+|---|---|
+| Root directory | `frontend` |
+| Framework preset | Vite (build `npm run build`, output `dist`) |
+| Environment variable | `VITE_API_URL=https://goin-server.onrender.com` (no trailing slash) |
+
+`frontend/vercel.json` sends every path to `index.html`, so links like `/listing/1` work when opened directly.
+
+### Backend on Render
+
+| Setting | Value |
+|---|---|
+| Root directory | `server` |
+| Build command | `npm install` |
+| Start command | `npm start` |
+| Health check path | `/api/health` |
+
+Environment variables:
+
+| Variable | Value | Why |
+|---|---|---|
+| `NODE_VERSION` | `24` | The backend uses Node's built-in SQLite |
+| `GOIN_CONTRACT_ID` | `CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI` | `contracts/deployments/testnet.json` is read only when this is unset |
+| `TRUST_PROXY` | `1` | Rate limits see each visitor's real address behind Render's proxy |
+| `ALLOWED_ORIGINS` | `https://goin-three.vercel.app` | Lets the web app call the API from the browser (CORS). Comma separated, no trailing slash |
+| `DATA_DIR` | `/var/data` | Only with a paid instance and a persistent disk mounted at that path |
+
+If the web app says "The GOIN server isn't reachable", open the health check URL first. If it answers `{"ok":true,...}`, the server is up, so check `ALLOWED_ORIGINS` and `VITE_API_URL`.
+
+### Free-plan limits
+
+On Render's free plan the backend sleeps after 15 minutes without traffic, so the first request can take up to a minute. Free instances have no persistent disk, so the database and uploaded receipts are erased whenever the service restarts, redeploys or sleeps. Listings, payments and settlements are on Stellar and are not affected, but their off-chain details are lost. Before a demo, open the health check URL to wake the server, and don't push to `main` right before presenting. To keep data, move to a paid instance, attach a disk and set `DATA_DIR`.
+
+## Roadmap
+
+The next 30-day sprint is proposed for a Stellar Instawards grant. The full plan, targets and budget are in [docs/GOIN-SOW.pdf](docs/GOIN-SOW.pdf). None of these features exist yet.
+
+| Deliverable | Planned work |
+|---|---|
+| 1. Buyer-protection contract update | `cancel_listing` for unsold listings, a payment deadline with a buyer-claimable `claim_refund` (only before the seller starts the transfer), and a two-step administrator handover, each with tests. Redeployed to a new testnet contract ID. |
+| 2. Persistent hosting and self-service onboarding | Paid backend instance with a persistent disk and daily backup, an in-app test-USDC faucet with per-wallet and daily caps, a higher per-IP rate limit for group testing, and an administrator queue for overdue listings. |
+| 3. Transaction clarity and buyer actions | On-chain history on every listing with Stellar Expert links, a wallet-wide history on My activity, a deadline countdown, and Claim refund and Cancel listing buttons. |
+| 4. Validation and documentation | At least 20 outside testers from Stellar Philippines, at least 20 full sales and 100 contract transactions, a demo video, tester and administrator guides, and a threat model. |
+
+Everything stays on testnet. Mainnet would follow a professional security audit, a legal review of ticket resale and payment custody in the Philippines, and ticket-provider partnerships.
 
 ## License
 
