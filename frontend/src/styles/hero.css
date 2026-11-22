@@ -1,25 +1,333 @@
-/* Homepage hero. INTERIM rules: the two-column hero, its backdrop, and HeroVisual replace
-   this whole file. Everything below is temporary so / stays presentable meanwhile. */
+/* Homepage hero: full-bleed two-column section, decorative backdrop layers, and the
+   HeroVisual artwork (sphere, orbit, planet, two tilted cards). Animations live in motion.css.
+   Decoration never takes input: .hero-backdrop and .hero-visual have pointer-events: none. */
 
+/* ---------- Layout ---------- */
 .hero {
-  padding-block: var(--space-12) var(--space-8);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(3rem, 6vw, 6rem) clamp(3.5rem, 6vw, 5.5rem);
 }
-.hero h1 {
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  min-height: min(640px, calc(100svh - var(--header-h) - 6rem));
+}
+.hero-copy {
+  min-width: 0;
+}
+.hero-copy h1 {
   font-size: var(--fs-hero);
-  max-width: 18ch;
+  font-weight: 750;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+  max-width: 14ch;
+  margin: 0 0 var(--space-6);
+}
+.text-gradient {
+  color: var(--accent-text);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .text-gradient {
+    background: var(--grad-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+.hero-copy .lead {
+  max-width: 52ch;
+  color: var(--text-2);
+  margin: 0 0 var(--space-8);
 }
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin: 0 0 var(--space-10);
+  margin: 0;
 }
 
-/* Interim while routes still render directly in <main class="container main">: top spacing,
-   and full width (as a flex item of .app, auto inline margins would shrink main to its
-   content). Once main drops .container and routes are wrapped in .container.page, this
-   selector no longer matches. */
-.main.container {
-  width: 100%;
-  padding-top: var(--space-8);
+/* ---------- Backdrop layers ---------- */
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Fade the clipped glow and planet edge out before the hero's bottom edge (no hard seam). */
+  -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 120px), transparent);
+  mask-image: linear-gradient(180deg, #000 calc(100% - 120px), transparent);
+}
+.hero-glow {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(45% 55% at 76% 38%, var(--hero-glow-a), transparent 70%),
+    radial-gradient(30% 40% at 94% 86%, var(--hero-glow-b), transparent 70%),
+    radial-gradient(40% 50% at 6% 96%, var(--hero-glow-c), transparent 70%),
+    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--surface) 55%, transparent) 62%, transparent 86%);
+}
+.hero-planet-edge {
+  position: absolute;
+  right: -300px;
+  bottom: -380px;
+  width: 560px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--sphere);
+  box-shadow: inset 18px 18px 60px rgb(255 255 255 / 0.06);
+  opacity: var(--planet-edge-opacity);
+}
+.hero-dots {
+  position: absolute;
+  left: -4%;
+  bottom: -6%;
+  width: min(62%, 760px);
+  height: auto;
+  opacity: var(--dots-opacity);
+}
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 160px;
+  opacity: var(--grain-opacity);
+}
+
+/* ---------- HeroVisual ---------- */
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+  container-type: inline-size;
+  pointer-events: none;
+  min-width: 0;
+}
+/* Glow (::before) under the sphere face (::after), so neither covers the other. */
+.hv-sphere {
+  position: absolute;
+  top: 12%;
+  left: 22%;
+  width: 62%;
+  aspect-ratio: 1;
+}
+.hv-sphere::before,
+.hv-sphere::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+}
+.hv-sphere::before {
+  inset: -18%;
+  background: radial-gradient(circle, var(--sphere-glow), transparent 65%);
+}
+.hv-sphere::after {
+  inset: 0;
+  background: var(--sphere);
+}
+.hv-orbit {
+  position: absolute;
+  top: 4%;
+  left: 4%;
+  width: 92%;
+  height: 92%;
+  overflow: visible;
+  transform: rotate(-18deg);
+}
+.hv-orbit ellipse {
+  fill: none;
+  stroke: var(--orbit);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.hv-orbit .hv-orbit-inner {
+  opacity: 0.5;
+}
+.hv-moon {
+  fill: var(--text);
+  opacity: 0.75;
+}
+.hv-planet {
+  position: absolute;
+  top: 2%;
+  left: 46%;
+  width: 4.5%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--planet-small);
+}
+.hv-stars {
+  display: var(--stars-display);
+  position: absolute;
+  inset: 0;
+}
+.hv-stars span {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--text);
+}
+
+/* Cards. --rot is shared by the static tilt, the float keyframes, and the mobile reduction. */
+.hv-card {
+  position: absolute;
+  aspect-ratio: 1.586;
+  transform: rotate(var(--rot));
+  display: grid;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--radius-xl);
+  border-radius: 4.75cqw;
+  padding: clamp(14px, 2.2vw, 32px);
+  padding: 6cqw;
+  box-shadow: var(--card-shadow);
+  color: #fff;
+  line-height: 1;
+}
+.hv-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.22) 45%, transparent 60%);
+}
+.hv-card-back {
+  --rot: -15deg;
+  top: 10%;
+  left: 2%;
+  width: 64%;
+  grid-template-rows: auto 1fr;
+  align-content: space-between;
+  background: var(--card-face-back);
+  opacity: 0.88;
+}
+.hv-card-back .hv-mark {
+  opacity: 0.55;
+}
+.hv-card-back .hv-number {
+  align-self: end;
+  opacity: 0.7;
+}
+.hv-card-front {
+  --rot: 10deg;
+  top: 36%;
+  left: 30%;
+  width: 66%;
+  grid-template-rows: auto 1fr auto;
+  background: var(--card-face-front);
+  opacity: 0.94;
+}
+.hv-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+}
+.hv-brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 12px);
+  gap: 2cqw;
+}
+.hv-mark {
+  display: grid;
+  place-items: center;
+  width: clamp(24px, 2.4vw, 36px);
+  width: 6.5cqw;
+  aspect-ratio: 1;
+  border-radius: clamp(6px, 0.5vw, 9px);
+  border-radius: 1.6cqw;
+  background: rgb(255 255 255 / 0.2);
+  font-weight: 700;
+  font-size: clamp(12px, 1.2vw, 18px);
+  font-size: 3.4cqw;
+}
+.hv-name {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: clamp(12px, 1.2vw, 18px);
+  font-size: 3.4cqw;
+}
+.hv-nfc {
+  width: clamp(18px, 1.8vw, 28px);
+  width: 5cqw;
+  height: auto;
+  opacity: 0.9;
+}
+.hv-chip {
+  align-self: center;
+  width: clamp(32px, 3.3vw, 48px);
+  width: 9cqw;
+  aspect-ratio: 9 / 7;
+  border-radius: clamp(5px, 0.5vw, 8px);
+  border-radius: 1.4cqw;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 30%, rgb(90 60 150 / 0.35) 30% 34%),
+    repeating-linear-gradient(0deg, transparent 0 30%, rgb(90 60 150 / 0.35) 30% 34%),
+    linear-gradient(135deg, #efe6ff, #bfa6f0);
+}
+.hv-number {
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.15vw, 17px);
+  font-size: 3.2cqw;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+}
+.hv-currency {
+  font-weight: 600;
+  font-size: clamp(10px, 0.95vw, 14px);
+  font-size: 2.6cqw;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+}
+
+/* ---------- Tablet and mobile: stack, copy first ---------- */
+@media (max-width: 1024px) {
+  .hero-inner {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+  .hero-copy h1 {
+    max-width: 18ch;
+  }
+  .hero-visual {
+    width: 100%;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+}
+@media (max-width: 639px) {
+  .hero-planet-edge {
+    display: none;
+  }
+  .hero-actions .btn-hero {
+    width: 100%;
+  }
+  .hero-visual {
+    aspect-ratio: 1 / 0.8;
+  }
+  .hv-card.hv-card-back {
+    --rot: -12deg;
+    width: 70%;
+    left: 0;
+    top: 8%;
+  }
+  .hv-card.hv-card-front {
+    --rot: 8deg;
+    width: 70%;
+    left: 26%;
+    top: 34%;
+  }
+}
+
+@media print {
+  .hero-backdrop,
+  .hero-visual,
+  .starfield {
+    display: none;
+  }
 }

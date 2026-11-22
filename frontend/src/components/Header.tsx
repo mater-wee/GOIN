@@ -1,5 +1,6 @@
 import { Contrast, Moon, Sun, Wallet, type LucideIcon } from "lucide-react";
-import { NavLink } from "react-router";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router";
 import { useAdmin } from "../lib/hooks";
 import { shortAddress } from "../lib/format";
 import { type Theme, useTheme } from "../lib/theme";
@@ -36,14 +37,38 @@ function ThemeSwitcher() {
   );
 }
 
+/** True once the page is scrolled past `threshold` px. Passive listener, at most one read per frame. */
+function useScrolled(threshold: number) {
+  const [scrolled, setScrolled] = useState(() => window.scrollY > threshold);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      setScrolled(window.scrollY > threshold);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [threshold]);
+  return scrolled;
+}
+
 export function Header() {
   const wallet = useWallet();
   const admin = useAdmin();
   const isAdmin = !!wallet.address && wallet.address === admin;
+  const { pathname } = useLocation();
+  const scrolled = useScrolled(8);
 
   return (
     <>
-      <header className="header">
+      <header className="header" data-overlay={pathname === "/" && !scrolled}>
         <div className="container header-inner">
           <NavLink to="/" className="brand">
             <span className="brand-mark" aria-hidden>
