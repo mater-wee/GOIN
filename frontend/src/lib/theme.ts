@@ -1,59 +1,45 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-export type Theme = "light" | "dark";
+export type Theme = "midnight" | "lavender" | "graphite";
+
+export const THEMES: readonly Theme[] = ["midnight", "lavender", "graphite"];
 
 /** Must match the key read by the inline script in index.html. */
 const STORAGE_KEY = "goin:theme";
 
-const systemTheme = (): Theme => (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+/** Accepts a known theme, maps the old light/dark values, and rejects anything else. */
+export function normalizeTheme(v: string | null | undefined): Theme | null {
+  if (v === "dark") return "midnight";
+  if (v === "light") return "lavender";
+  return THEMES.find((t) => t === v) ?? null;
+}
 
 function savedTheme(): Theme | null {
   try {
-    const v = localStorage.getItem(STORAGE_KEY);
-    return v === "light" || v === "dark" ? v : null;
+    return normalizeTheme(localStorage.getItem(STORAGE_KEY));
   } catch {
     return null;
   }
 }
 
-function applyTheme(theme: Theme): void {
-  document.documentElement.dataset.theme = theme;
-}
-
 /**
- * Light/dark theme. Follows the operating system until the user picks one,
- * then remembers that choice in this browser.
+ * Midnight Galaxy, Cloud Lavender, or Graphite. Midnight Galaxy is the default;
+ * the user's choice is remembered in this browser.
  */
-export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(
-    () => (document.documentElement.dataset.theme as Theme | undefined) ?? savedTheme() ?? systemTheme(),
+export function useTheme(): { theme: Theme; setTheme: (t: Theme) => void } {
+  const [theme, setThemeState] = useState<Theme>(
+    () => normalizeTheme(document.documentElement.dataset.theme) ?? savedTheme() ?? "midnight",
   );
 
-  // Keep following the OS setting while the user hasn't chosen a theme.
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => {
-      if (savedTheme()) return;
-      const next = systemTheme();
-      applyTheme(next);
-      setTheme(next);
-    };
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
+  const setTheme = useCallback((next: Theme) => {
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      // Storage can be blocked (private mode); the theme still applies for this visit.
+    }
+    setThemeState(next);
   }, []);
 
-  const toggle = useCallback(() => {
-    setTheme((current) => {
-      const next: Theme = current === "dark" ? "light" : "dark";
-      applyTheme(next);
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        // Storage can be blocked (private mode); the theme still applies for this visit.
-      }
-      return next;
-    });
-  }, []);
-
-  return { theme, toggle };
+  return { theme, setTheme };
 }

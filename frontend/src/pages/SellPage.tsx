@@ -1,7 +1,9 @@
+import { CircleCheck, TriangleAlert } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import { AccountChecklist } from "../components/AccountChecklist";
 import { ChecksList } from "../components/ChecksList";
+import { Icon } from "../components/Icon";
 import { TxFeedback } from "../components/ui";
 import { MAX_EVIDENCE_BYTES, PHP_PER_USDC } from "../config";
 import {
@@ -197,7 +199,13 @@ export function SellPage() {
 
   const receiptHint = (field: keyof FormState) => {
     const value = suggested[field];
-    if (!value || value === form[field]) return value ? <span className="hint hint-ai">✓ Matches your receipt</span> : null;
+    if (!value || value === form[field])
+      return value ? (
+        <span className="hint hint-ai">
+          <Icon icon={CircleCheck} size={16} />
+          Matches your receipt
+        </span>
+      ) : null;
     return (
       <span className="hint hint-warn">
         Receipt shows “{value}”.{" "}
@@ -251,8 +259,9 @@ export function SellPage() {
               </strong>{" "}
               Check every field below. The reader suggests values; it doesn't verify that the ticket is real.
               {receipt.warnings.map((w) => (
-                <div key={w} className="small">
-                  ⚠ {w}
+                <div key={w} className="small notice-line">
+                  <Icon icon={TriangleAlert} size={16} />
+                  {w}
                 </div>
               ))}
             </div>

@@ -1,25 +1,38 @@
+import { Contrast, Moon, Sun, Wallet, type LucideIcon } from "lucide-react";
 import { NavLink } from "react-router";
 import { useAdmin } from "../lib/hooks";
 import { shortAddress } from "../lib/format";
-import { useTheme } from "../lib/theme";
+import { type Theme, useTheme } from "../lib/theme";
 import { useWallet } from "../lib/wallet";
+import { Icon } from "./Icon";
 import { ExternalLink } from "./ui";
 
-/** Switches between light and dark mode. Shows the mode you'll switch to. */
-function ThemeToggle() {
-  const { theme, toggle } = useTheme();
-  const next = theme === "dark" ? "light" : "dark";
+const THEME_OPTIONS: { id: Theme; label: string; icon: LucideIcon }[] = [
+  { id: "midnight", label: "Midnight Galaxy", icon: Moon },
+  { id: "lavender", label: "Cloud Lavender", icon: Sun },
+  { id: "graphite", label: "Graphite", icon: Contrast },
+];
+
+/** Picks one of the three themes. A radio group, so arrow keys move between options. */
+function ThemeSwitcher() {
+  const { theme, setTheme } = useTheme();
   return (
-    <button
-      type="button"
-      className="btn btn-ghost btn-small theme-toggle"
-      onClick={toggle}
-      aria-label={`Switch to ${next} mode`}
-      title={`Switch to ${next} mode`}
-    >
-      <span aria-hidden>{theme === "dark" ? "☀" : "☾"}</span>
-      <span className="theme-toggle-label">{theme === "dark" ? "Light" : "Dark"}</span>
-    </button>
+    <fieldset className="theme-switch">
+      <legend className="sr-only">Appearance</legend>
+      {THEME_OPTIONS.map(({ id, label, icon }) => (
+        <label key={id} title={label} data-checked={theme === id || undefined}>
+          <input
+            type="radio"
+            name="goin-theme"
+            className="sr-only"
+            checked={theme === id}
+            onChange={() => setTheme(id)}
+          />
+          <Icon icon={icon} />
+          <span className="sr-only">{label}</span>
+        </label>
+      ))}
+    </fieldset>
   );
 }
 
@@ -46,7 +59,7 @@ export function Header() {
             <NavLink to="/activity">My activity</NavLink>
             {isAdmin && <NavLink to="/admin">Admin</NavLink>}
           </nav>
-          <ThemeToggle />
+          <ThemeSwitcher />
           <WalletButton />
         </div>
       </header>
@@ -70,7 +83,12 @@ function WalletButton() {
     );
   }
   return (
-    <button className="btn btn-primary" onClick={() => void connect()} disabled={connecting || installed === false}>
+    <button
+      className="btn btn-primary wallet-connect"
+      onClick={() => void connect()}
+      disabled={connecting || installed === false}
+    >
+      <Icon icon={Wallet} size={16} />
       {connecting ? "Connecting…" : "Connect Freighter"}
     </button>
   );

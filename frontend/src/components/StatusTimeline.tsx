@@ -1,4 +1,6 @@
+import { Check, X } from "lucide-react";
 import type { ListingStatusTag } from "../lib/contract";
+import { Icon } from "./Icon";
 
 type StepState = "done" | "current" | "todo" | "failed";
 
@@ -39,7 +41,11 @@ export function StatusTimeline({ status }: { status: ListingStatusTag }) {
       {steps.map((s) => (
         <li key={s.label} className={`timeline-step step-${s.state}`}>
           <span className="timeline-dot" aria-hidden>
-            {s.state === "done" ? "✓" : s.state === "failed" ? "✕" : ""}
+            {s.state === "done" ? (
+              <Icon icon={Check} size={14} strong />
+            ) : s.state === "failed" ? (
+              <Icon icon={X} size={14} strong />
+            ) : null}
           </span>
           <span>{s.label}</span>
         </li>

@@ -1,4 +1,6 @@
+import { RefreshCw } from "lucide-react";
 import type { ReactNode } from "react";
+import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
 import { EmptyState, ExternalLink, Spinner } from "../components/ui";
 import type { ListingStatusTag } from "../lib/contract";
@@ -40,6 +42,7 @@ export function AdminPage() {
       <div className="section-head">
         <h1>Administrator</h1>
         <button className="btn btn-ghost btn-small" onClick={() => void reload()} disabled={loading}>
+          <Icon icon={RefreshCw} size={16} />
           Refresh
         </button>
       </div>

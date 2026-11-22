@@ -1,4 +1,6 @@
+import { RefreshCw } from "lucide-react";
 import { Link } from "react-router";
+import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
 import { EmptyState, ExternalLink, Spinner } from "../components/ui";
 import { GOIN_CONTRACT_ID } from "../config";
@@ -49,6 +51,7 @@ export function BrowsePage() {
         <div className="section-head">
           <h2>Available tickets</h2>
           <button className="btn btn-ghost btn-small" onClick={() => void reload()} disabled={loading}>
+            <Icon icon={RefreshCw} size={16} />
             Refresh
           </button>
         </div>

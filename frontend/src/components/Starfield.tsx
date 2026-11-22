@@ -29,16 +29,16 @@ function layer(random: () => number, count: number, minAlpha: number, glow: numb
   return stars.join(",");
 }
 
-/** Fixed starfield behind the app. Only visible in dark mode (see styles.css). */
+/** Fixed starfield behind the app. Only visible in Midnight Galaxy (see --stars-display). */
 export function Starfield() {
   const layers = useMemo(() => {
     const random = seeded(20261119);
     return {
-      dust: layer(random, 260, 0.25, 0),
-      small: layer(random, 120, 0.45, 0),
-      twinkleA: layer(random, 45, 0.6, 1),
-      twinkleB: layer(random, 45, 0.6, 1),
-      bright: layer(random, 14, 0.85, 3),
+      dust: layer(random, 140, 0.25, 0),
+      small: layer(random, 70, 0.45, 0),
+      twinkleA: layer(random, 24, 0.6, 1),
+      twinkleB: layer(random, 24, 0.6, 1),
+      bright: layer(random, 8, 0.85, 3),
     };
   }, []);
 

@@ -1,7 +1,9 @@
+import { CircleCheck, TriangleAlert } from "lucide-react";
 import { Link } from "react-router";
 import type { ListingView } from "../lib/hooks";
 import { formatEventDate, shortAddress } from "../lib/format";
 import { formatPhp, formatUsdc } from "../lib/money";
+import { Icon } from "./Icon";
 import { StatusBadge } from "./ui";
 
 export function ListingCard({ view }: { view: ListingView }) {
@@ -27,9 +29,10 @@ export function ListingCard({ view }: { view: ListingView }) {
       <p className="muted small">Seller {shortAddress(listing.seller)}</p>
       {details?.issueCount !== undefined && listing.status.tag === "PendingReview" && (
         <p className={`small ${details.issueCount ? "issue-flag" : "issue-clear"}`}>
+          <Icon icon={details.issueCount ? TriangleAlert : CircleCheck} size={16} />
           {details.issueCount
-            ? `⚠ ${details.issueCount} receipt check${details.issueCount === 1 ? "" : "s"} to review`
-            : "✓ Receipt matches the listing"}
+            ? `${details.issueCount} receipt check${details.issueCount === 1 ? "" : "s"} to review`
+            : "Receipt matches the listing"}
         </p>
       )}
     </Link>

@@ -1,7 +1,9 @@
+import { RefreshCw } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { Link } from "react-router";
 import { isSignedIn, retryPendingDrafts } from "../lib/api";
 import { AccountChecklist } from "../components/AccountChecklist";
+import { Icon } from "../components/Icon";
 import { ListingCard } from "../components/ListingCard";
 import { EmptyState, ExternalLink, Spinner } from "../components/ui";
 import { accountUrl } from "../lib/format";
@@ -49,6 +51,7 @@ export function ActivityPage() {
       <div className="section-head">
         <h1>My activity</h1>
         <button className="btn btn-ghost btn-small" onClick={() => void reload()} disabled={loading}>
+          <Icon icon={RefreshCw} size={16} />
           Refresh
         </button>
       </div>

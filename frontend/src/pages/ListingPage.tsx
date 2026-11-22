@@ -1,5 +1,7 @@
+import { ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { AccountChecklist, accountReady } from "../components/AccountChecklist";
+import { Icon } from "../components/Icon";
 import { ReviewPanel } from "../components/ReviewPanel";
 import { StatusTimeline } from "../components/StatusTimeline";
 import { EmptyState, ExternalLink, Spinner, StatusBadge, TxFeedback } from "../components/ui";
@@ -33,7 +35,7 @@ export function ListingPage() {
     <div className="detail">
       <section className="detail-main">
         <Link to="/" className="back">
-          ← All tickets
+          <Icon icon={ArrowLeft} size={16} /> All tickets
         </Link>
         <div className="detail-title">
           <h1>{details?.eventName ?? `Ticket listing #${listing.id}`}</h1>
@@ -223,7 +225,7 @@ function ActionPanel({ listing, onDone }: { listing: Listing; onDone: () => void
 
   if (!body) return null;
   return (
-    <div className="card">
+    <div className="card card-feature">
       <h3>{isSeller ? "Your listing" : isBuyer ? "Your purchase" : "Buy this ticket"}</h3>
       {body}
       <TxFeedback error={action.error} hash={action.hash} />
