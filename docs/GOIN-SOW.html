@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>GOIN – Instawards Statement of Work</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;line-height:1.4;max-width:820px;margin:24px auto;color:#000}
+h1{font-size:13pt;text-align:center;margin:0}h1+p{text-align:center;font-weight:bold;margin-top:2px}
+h2{font-size:11.5pt;margin-top:22px}h3{font-size:11pt;margin-top:16px}
+table{border-collapse:collapse;width:100%;margin:8px 0 14px}td,th{border:1px solid #000;padding:6px 8px;vertical-align:top;text-align:left}
+th{font-weight:bold}td.k{font-weight:bold;width:32%}code{font-family:Consolas,monospace;font-size:9.5pt;word-break:break-all}
+.note{font-size:10pt;color:#333}.c{text-align:center}
+</style></head><body>
+
+<h1>Instawards Statement of Work (SOW)</h1>
+<p>30-Day Scoped Engagement</p>
+
+<h2>1. Project &amp; Team Information</h2>
+<table>
+<tr><td class="k">Project Name:</td><td>GOIN</td></tr>
+<tr><td class="k">Builder / Team Name:</td><td>Vixen<br>https://github.com/mater-wee/GOIN</td></tr>
+<tr><td class="k">Primary Contact (Name + Email):</td><td>Ma. Theresa Gila - theresagila11@gmail.com</td></tr>
+<tr><td class="k">Team Members</td><td>Ma. Theresa Gila<br>Excelsis Christi Valencia</td></tr>
+<tr><td class="k">Wallet Address</td><td><code style="font-size:10.5pt">GCOQKGO767TJCUGXT3CUCP6BDIHPTFZVP6DESKVG3KQ75MO5DGE5UFAO</code></td></tr>
+<tr><td class="k">Ambassador Chapter:</td><td>Stellar Philippines</td></tr>
+<tr><td class="k">Ambassador Chapter Lead:</td><td>Nelson Lumbres</td></tr>
+<tr><td class="k">Date Submitted:</td><td>2026-11-22</td></tr>
+<tr><td class="k">Suggested Sprint Start Date:</td><td>On approval (within SDF's 3–5 business-day review window)</td></tr>
+</table>
+
+<h2>2. Instawards Overview &amp; Intent</h2>
+<h3>2.1 Instawards Purpose (for Builder Context)</h3>
+<p>Instawards are designed to support short, clearly scoped, execution-focused work that helps a project make tangible progress toward building on Stellar. Instawards are meant to fund specific, achievable outcomes that can be completed and demonstrated within 30 days or less.</p>
+<p>This SOW represents a shared commitment between the Builder and the Ambassador Chapter Lead on what will be delivered, why it matters, and how success will be verified.</p>
+
+<h2>3. Problem Statement &amp; Objective</h2>
+<table>
+<tr><td class="k" style="width:16%">Problem Being Addressed</td><td style="width:22%">What specific problem, gap, or blocker is this Instaward intended to solve?</td><td>
+<p>Students and young professionals in Metro Manila who can no longer attend a concert or event usually resell their tickets through Facebook groups and get paid by direct bank or e-wallet transfer. Buyers risk fake, duplicated or overpriced tickets, and sellers risk buyers who never pay. Neither side has any protection once money is sent.</p>
+<p><b>GOIN is already working on Stellar testnet.</b> A seller lists a ticket with purchase evidence. An administrator reviews it. The buyer pays in USDC into a Soroban contract that holds the payment until the administrator confirms the ticket transfer, then pays the seller or refunds the buyer. The contract rejects any resale price above the original price and any ticket that was already listed. The web app (React, Freighter wallet) and the backend (wallet sign-in, off-chain evidence storage, OCR receipt reading with optional AI extraction) are built and run the full flow.</p>
+<p>What still stops real people from using GOIN:</p>
+<ul>
+<li><b>A buyer's money can be stuck.</b> Only the administrator can refund. If the seller never starts the transfer and the administrator does not act, the buyer has no way to get the USDC back. A seller also cannot withdraw a listing before it is sold.</li>
+<li><b>Testers cannot get started on their own.</b> Test USDC is issued by a team script run from the command line, and the backend is not yet publicly deployed for outside testers [TO VERIFY: confirm no public backend URL exists]. No outside tester can complete the flow without the team's help.</li>
+<li><b>Buyers and sellers cannot easily see what happened.</b> Status is shown per listing, but there is no transaction history, no deadline information, and the new interface is not yet merged and released.</li>
+<li><b>It has not been tested by outside users.</b> All runs so far are by the team.</li>
+</ul></td></tr>
+<tr><td class="k">Objective of This Instaward</td><td>In one or two sentences, what will be true at the end of 30 days if this Instaward is successful?</td><td>
+<p>In 30 days, GOIN will be a publicly reachable testnet app where a first-time buyer or seller can set up a wallet, get test USDC, and complete a protected ticket sale without the team's help, and where a buyer can recover their own payment if a seller never starts the transfer.</p>
+<p>At least 20 external testers recruited through Stellar Philippines will complete full listings and purchases, and every transaction will be public on Stellar Expert.</p></td></tr>
+<tr><td colspan="3">Example prompts for builders: What is currently preventing progress? What is unclear, missing, or unbuilt today? Why is this problem worth solving now?</td></tr>
+</table>
+
+<p><b>Target Users.</b> Three audiences, one receipt:</p>
+<ul>
+<li><b>Student and young-professional ticket sellers in Metro Manila</b> who need to resell a concert or event ticket they can no longer use, and want to be sure they get paid.</li>
+<li><b>Student and young-professional ticket buyers in Metro Manila and nearby cities</b> who want resale tickets to sold-out events at no more than the original price, without the risk of paying a stranger who disappears.</li>
+<li><b>Independent event organizers</b> who want visibility into resale of their tickets. In this sprint they can only see public listing and settlement transactions on Stellar Expert; a dedicated organizer view is not part of this scope.</li>
+</ul>
+
+<h3>3.1 Key Outcomes</h3>
+<p>By the end of this sprint, any GOIN user will be able to:</p>
+<ul>
+<li><b>Get started without the team.</b> Connect Freighter on testnet, fund the account with Friendbot and add the USDC trustline (already in the app), then receive capped test USDC from a new in-app faucet instead of a team script.</li>
+<li><b>Recover a stuck payment.</b> If the seller has not started the transfer before the payment deadline, the buyer claims a full refund from the contract without the administrator.</li>
+<li><b>Withdraw an unsold listing.</b> A seller can cancel a listing that has not been bought.</li>
+<li><b>See every step.</b> Each listing shows its on-chain history (listed, reviewed, paid, transfer started, settled, refunded or cancelled) with links to Stellar Expert, and the time left before the payment deadline.</li>
+<li><b>Use a clear, modern interface</b> in three themes (Midnight Galaxy, Cloud Lavender, Graphite) that works on desktop and phone.</li>
+</ul>
+<p>This sprint improves a working product. The contract changes are small, tested, and redeployed to testnet only.</p>
+
+<h3>Expected Ecosystem Impact</h3>
+<p>Each tester connects a Stellar wallet, adds a USDC trustline and completes at least one listing or purchase. A full sale is five Soroban transactions (create, review, purchase, start transfer, confirm), so 20 full sales add at least 100 testnet transactions. The sprint also produces an open, documented pattern any Stellar marketplace can reuse: a capped-price, admin-reviewed escrow with a buyer-claimable refund deadline.</p>
+
+<h3>3.2 The Gap &amp; Current Challenges</h3>
+<p>Buying a resold ticket from a stranger is still a leap of faith. The channels people use move money fast but offer no protection, and the channels that protect payments charge high fees or allow unlimited markups:</p>
+<table>
+<tr><th style="width:32%">Approach</th><th>Key Limitation</th></tr>
+<tr><td>Facebook groups and direct bank or e-wallet transfer</td><td>Fast and free, but the payment is final. Fake and duplicated tickets are common, and there is no price limit.</td></tr>
+<tr><td>Online classifieds and general marketplaces</td><td>Larger audience, but payment is still usually arranged directly between strangers, with no check of the ticket.</td></tr>
+<tr><td>Global resale marketplaces</td><td>Buyer protection, but high fees, markups above face value, and limited coverage of Philippine events.</td></tr>
+<tr><td>Official organizer transfer or resale, where offered</td><td>Trusted, but not available for every event, and rules and timing vary by ticket provider.</td></tr>
+<tr><td>GOIN today</td><td>Price-capped, admin-reviewed USDC escrow working on testnet, but refunds depend entirely on the administrator, testers need team help to get test USDC, and it has not been tested by outside users.</td></tr>
+</table>
+
+<h3>3.3 Why Stellar &amp; Ecosystem Impact</h3>
+<p>GOIN needs low fees, fast settlement, a dollar stablecoin and programmable escrow in one place. Stellar provides all four:</p>
+<ul>
+<li><b>USDC payments.</b> A ₱2,500 ticket is paid as 44.64 USDC, so neither side carries crypto price risk.</li>
+<li><b>Soroban smart contracts.</b> The GOIN contract holds the buyer's USDC and enforces the rules in code: resale price never above the original, one listing per ticket, only the seller can start the transfer, and only the administrator can approve listings or confirm outcomes.</li>
+<li><b>Trustlines.</b> Buyers and sellers explicitly opt in to hold the USDC asset.</li>
+<li><b>Wallet sign-in (SEP-53).</b> Users sign in to the backend by signing a free message in Freighter, with no password.</li>
+</ul>
+<p>The contract Wasm is about 11.5 KB, and each step is a single low-fee testnet transaction. [TO VERIFY: measured fee per step, from Stellar Expert, if the team wants to quote it.]</p>
+
+<h3>Ecosystem Impact</h3>
+<p>The sprint adds real activity on Stellar: every tester connects a Freighter wallet, adds a USDC trustline, and runs listings and purchases through the GOIN contract, giving at least 100 Soroban transactions from at least 20 external wallets. The contract, backend and guides are open source under the MIT License, so other Stellar builders in the Philippines can reuse the price-capped escrow and the refund-deadline pattern.</p>
+
+<h3>Why Now</h3>
+<p>The core contract, web app and backend are built and tested, so the remaining blockers are buyer protection, self-service onboarding and real-user testing. These are exactly what this sprint removes. Doing it now lets GOIN test with Stellar Philippines community members while the end-to-end flow is fresh.</p>
+<p>To be clear about networks: everything in this Instaward runs on <b>Stellar testnet</b> with a test USDC asset issued by the team, not Circle's USDC. Approval does not move GOIN to mainnet. Mainnet comes afterwards, in this order: a professional security audit of the contract, a legal review of ticket resale and payment custody in the Philippines, partnerships with ticket providers for real transfer confirmation, and then a mainnet launch with USDC.</p>
+
+<h3>3.4 Existing Approaches</h3>
+<table>
+<tr><th style="width:32%">Platform</th><th>Primary Focus</th></tr>
+<tr><td>Facebook resale groups</td><td>Free community listings; payment and trust are left entirely to the buyer and seller.</td></tr>
+<tr><td>Online classifieds and marketplaces</td><td>General buy-and-sell listings; tickets are one category among many, with no ticket checks.</td></tr>
+<tr><td>Global resale marketplaces</td><td>Custodial buyer protection; fees and markups set by the platform.</td></tr>
+<tr><td>Blockchain and NFT ticketing</td><td>Tickets issued on-chain by the organizer; requires organizers to adopt the system from the start.</td></tr>
+<tr><td>GOIN</td><td>Peer-to-peer resale of existing tickets at no more than face value, with evidence review and a USDC payment held by a Soroban contract until the transfer is confirmed.</td></tr>
+</table>
+
+<h3>3.5 Validation Scope &amp; Practical Use Cases</h3>
+<h3>Validation Scope</h3>
+<p>This Instaward validates three things:</p>
+<ul>
+<li><b>Self-service onboarding:</b> a first-time tester sets up a testnet wallet, gets test USDC and completes a purchase or listing without team help.</li>
+<li><b>Buyer protection:</b> the full sale, the administrator refund, the buyer-claimed refund after the deadline, and seller cancellation all work on testnet and are visible on Stellar Expert.</li>
+<li><b>Usability:</b> testers complete the flow with the new interface and rate it in a follow-up survey.</li>
+</ul>
+<p>This validation does not cover real ticket-provider integration, automated ticket authenticity checks, mainnet payments or an organizer dashboard. Ticket transfer remains a simulated step confirmed by the administrator.</p>
+<h3>Practical Use Cases</h3>
+<ul>
+<li><b>A student who cannot attend.</b> A student bought a ₱2,500 concert ticket but has an exam that day. She uploads her receipt; GOIN reads it and fills in the listing. The administrator approves it, a buyer pays 44.64 USDC into the contract, she transfers the ticket, and the contract pays her once the transfer is confirmed.</li>
+<li><b>A buyer worried about being scammed.</b> A buyer pays for a ticket, but the seller never starts the transfer. After the payment deadline, the buyer claims a full refund from the contract without waiting for anyone.</li>
+<li><b>A failed transfer.</b> The seller starts the transfer, but the ticket provider rejects it. The administrator marks the transfer as failed and the contract refunds the buyer in full.</li>
+<li><b>A scalper.</b> A seller tries to list a ₱2,500 ticket for ₱4,000, or list the same ticket twice. The contract rejects both.</li>
+</ul>
+
+<h3>3.6 Sprint Constraints &amp; Targets</h3>
+<ul>
+<li><b>Open-source delivery:</b> GOIN is MIT licensed. Source: github.com/mater-wee/GOIN.</li>
+<li><b>Testnet only:</b> all funded work and validation runs on Stellar testnet. Current testnet contract: <code>CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI</code>. The updated contract will be redeployed to a new testnet contract ID, published with the evidence. No mainnet deployment, spend or activity is requested.</li>
+<li><b>Small, bounded contract changes:</b> seller cancellation, a buyer-claimable refund after a payment deadline, and a two-step administrator handover, each with tests, keeping the existing functions unchanged. A professional audit is required before any mainnet deployment and is not part of this award.</li>
+<li><b>Targets by the end of the 30-day sprint:</b>
+<ul>
+<li>At least 20 new external testers</li>
+<li>At least 20 unique tester wallet addresses with a USDC trustline</li>
+<li>At least 20 listings created by testers</li>
+<li>At least 20 full sale lifecycles ending in Settled or Refunded</li>
+<li>At least 100 new testnet transactions on the GOIN contract</li>
+<li>At least 20 survey responses, averaging at least 4.0 out of 5 [no baseline yet; this sprint sets it]</li>
+</ul></li>
+<li><b>Why Instawards:</b> a bounded 30-day sprint on specific buyer-protection, onboarding and validation gaps, not an open-ended product build.</li>
+</ul>
+
+<h3>3.7 How It Works</h3>
+<ol>
+<li><b>Set up a wallet.</b> The user connects Freighter on testnet. The in-app checklist funds the account with Friendbot, adds the USDC trustline, and requests capped test USDC from the GOIN faucet.</li>
+<li><b>Sign in.</b> The user signs a free one-time message (SEP-53) so the backend knows which wallet they control. It is not a transaction.</li>
+<li><b>Seller lists a ticket.</b> The seller uploads the receipt. OCR (with optional AI extraction) suggests the event, date, venue, category and price, and flags mismatches. The backend stores the details and evidence off-chain and computes <code>ticket_ref</code>, a SHA-256 hash of the ticket record. The seller signs <code>create_listing</code>; the contract rejects a price above the original or a ticket already listed.</li>
+<li><b>Administrator reviews.</b> The administrator checks the evidence and the receipt-check results, then approves or rejects the listing on-chain.</li>
+<li><b>Buyer pays.</b> The buyer signs <code>purchase</code>. The USDC moves from the buyer into the GOIN contract and a payment deadline starts.</li>
+<li><b>Seller starts the transfer.</b> The seller transfers the ticket through the ticket provider (simulated for this testnet sprint) and signs <code>start_transfer</code>.</li>
+<li><b>Outcome.</b> The administrator confirms success (the contract pays the seller) or failure (the contract refunds the buyer). If the seller never starts the transfer before the deadline, the buyer claims the refund directly.</li>
+<li><b>Verify on-chain.</b> Every step is a Soroban transaction shown in the listing's history with a Stellar Expert link.</li>
+</ol>
+
+<h3>3.8 Architecture &amp; Trust Model</h3>
+<p>This sprint adds three pieces to GOIN's existing architecture: buyer-protection functions in the contract, a public testnet deployment with self-service test USDC, and a clearer interface with on-chain history. GOIN still never holds a user's keys, and the platform operator never holds the escrowed USDC: the contract does.</p>
+<p><b>Application layer.</b> A React + TypeScript web app (Vite) using the Freighter wallet for every signature and a generated typed client for the contract. It reads listing state directly from the contract and transaction history from Stellar.</p>
+<p><b>Server layer.</b> A Node.js (Express) backend with SQLite that keeps everything that must stay off-chain: event details, order numbers and purchase evidence. It provides SEP-53 wallet sign-in, receipt OCR (Tesseract, running locally) with optional AI extraction of text only, and draft-to-listing linking that is checked against the chain. Evidence files and order numbers are visible only to the seller and the administrator. The new testnet faucet sends a capped amount of test USDC per wallet. The backend holds no user funds and cannot move escrowed USDC.</p>
+<p><b>Ledger layer.</b> The GOIN Soroban contract holds each buyer's payment and enforces the price cap, duplicate block, status order and caller permissions. On-chain it stores only <code>ticket_ref</code>, prices, Stellar addresses and status. Personal information, ticket files, QR codes and receipts stay off-chain.</p>
+<p><b>Limitations, explicit by design:</b></p>
+<ul>
+<li><b>The administrator is trusted.</b> One administrator key approves listings and decides whether a transfer succeeded, which decides who receives the escrowed USDC. The buyer-claimable refund removes the administrator only from the "seller never started" case.</li>
+<li><b>Ticket transfer is simulated.</b> No ticket provider is integrated. The administrator's confirmation stands in for the provider's confirmation.</li>
+<li><b>Review is not proof of authenticity.</b> Approval and receipt checks show that the evidence looked consistent; they do not prove a ticket is real, owned by the seller or transferable. OCR and AI only suggest and flag.</li>
+<li><b>Test assets only.</b> The USDC used is a test asset issued by the team on testnet.</li>
+<li><b>Price conversion is off-chain.</b> The contract compares prices in USDC base units; the app and backend convert pesos at a fixed demo rate of ₱56 per USDC (₱2,500 = 44.64 USDC). There is no live rate feed.</li>
+</ul>
+<p>Roadmap items outside this sprint: ticket-provider integration, multi-party or dispute-based confirmation, organizer dashboard, managed database and private cloud evidence storage at production scale, and mainnet.</p>
+
+<h2>4. Scope of Work (30-Day Deliverables)</h2>
+<p><b>Important guidance:</b> This scope must be achievable within <b>30 calendar days</b>. If the work feels larger, it should be reduced or split into more achievable phases.</p>
+<h3>4.1 In-Scope Deliverables</h3>
+<table>
+<tr><th class="c" style="width:22%">Deliverable</th><th class="c">Description (What will be built or produced?)</th><th class="c" style="width:30%">Why this matters</th></tr>
+<tr><td><b>Deliverable 1: Buyer-protection contract update</b></td><td>Three additions to the existing GOIN contract: <code>cancel_listing</code> (seller withdraws a listing before it is bought; the ticket stays blocked from relisting), a payment deadline recorded at purchase with <code>claim_refund</code> (buyer recovers the full payment if the seller has not started the transfer by the deadline), and a two-step administrator handover. Unit tests for each, alongside the existing 5 tests. Redeploy to testnet, regenerate the typed client and connect the new functions in the app.</td><td>Today a buyer's money can only be returned by the administrator. A buyer-claimable refund removes the biggest trust gap for the most common failure: a seller who takes the order and does nothing.</td></tr>
+<tr><td><b>Deliverable 2: Public testnet deployment and self-service onboarding</b></td><td>Deploy the backend behind HTTPS and the web app on Vercel, so the app is reachable by outside testers. An in-app test-USDC faucet with a per-wallet cap. Production configuration of the existing per-IP and per-wallet rate limits (behind a proxy), and a documented backup of the database and evidence files. An administrator queue for overdue and transfer-started listings.</td><td>Right now the backend is not publicly reachable and test USDC requires a command-line script. Testers must be able to start on their own, or validation cannot happen.</td></tr>
+<tr><td><b>Deliverable 3: Transaction clarity and interface release</b></td><td>Finalize, review and release the Midnight Galaxy interface already built on branch <code>ui/midnight-galaxy-redesign</code> (three themes, responsive, reduced-motion support). Per-listing on-chain history from contract events with Stellar Expert links. The existing wallet-setup checklist extended with the faucet step. Plain-language status, deadline countdown and the "Claim refund" and "Cancel listing" actions.</td><td>Buyers and sellers need to see where their money is and what happens next. A clear, trustworthy interface is what turns a working escrow into something people use.</td></tr>
+<tr><td><b>Deliverable 4: Validation and documentation</b></td><td>At least 20 external testers onboarded through Stellar Philippines, running full sales on testnet as buyers and sellers. A 3–5 minute demo video, a tester guide, an administrator guide, a short threat model, a list of transaction hashes, and a follow-up survey.</td><td>Proves the work with real users rather than a team demo, and produces public, checkable evidence on Stellar Expert.</td></tr>
+<tr><td colspan="3"><b>Already completed before this award (not funded here):</b> the Soroban contract with price cap, duplicate block, administrator review, USDC escrow, settlement and refund, with 5 unit tests and a testnet deployment; the React web app with Freighter (Tickets, Listing, Sell, My activity, Admin pages); the backend with SEP-53 sign-in, off-chain evidence storage, chain-checked draft linking and OCR receipt reading with optional AI extraction.</td></tr>
+<tr><td colspan="3" class="c"><b>Out-of-Scope (Explicitly Not Included)</b><br>List anything that might be assumed but is not included in this Instaward scope.</td></tr>
+<tr><td colspan="3"><ul>
+<li>Integration with any real ticket provider or automated ticket transfer; transfer stays simulated and administrator-confirmed</li>
+<li>Any claim or mechanism that proves a ticket is authentic, owned by the seller, or transferable</li>
+<li>Dispute resolution, multi-party confirmation, or removing the administrator from the success/failure decision</li>
+<li>Organizer dashboard or organizer-issued tickets</li>
+<li>Platform fees, seller identity verification (KYC) or AI-based fraud scoring</li>
+<li>Migration to a managed production database or private cloud evidence storage</li>
+<li>Fiat cash-in or cash-out, anchors, or a live PHP/USD rate feed</li>
+<li>Native mobile app or app-store listing</li>
+<li>Mainnet deployment, Circle USDC, mainnet testing or mainnet transaction costs</li>
+<li>A professional security audit or formal verification of the contract</li>
+<li>Any token, NFT ticket, airdrop, DeFi, bridge or cross-chain feature</li>
+</ul></td></tr>
+</table>
+
+<h3>4.2 Deliverable-Aligned Budget Request</h3>
+<table>
+<tr><th class="c" style="width:45%">Requested Budget Amount</th><th class="c">Rationale for Budget Request</th></tr>
+<tr><td><b>$5,000 USD (paid in XLM)</b> — 200 hours of development and testing at $25/hour, within the $5,000 per-award cap.</td><td><b>Development: 150 hours × $25 = $3,750.</b> Buyer-protection contract update (D1, 40 h), public deployment and self-service onboarding (D2, 40 h), transaction clarity and interface release (D3, 40 h), and validation and documentation (D4, 30 h). <b>QA and testing: 50 hours × $25 = $1,250.</b> Contract tests and testnet runs of every path, API and faucet tests, cross-browser and phone checks, and cohort validation runs. <b>Total: 200 hours × $25 = $5,000</b>, shared by the two team members over 30 days. Testnet fees are free (Friendbot). Hosting during the sprint uses free tiers and is not requested here.</td></tr>
+</table>
+
+<h2>5. 30-Day Execution Plan &amp; Timeline</h2>
+<h3>5.1 Weekly Breakdown</h3>
+<table>
+<tr><th style="width:9%">Week</th><th>Planned Work</th><th style="width:38%">Expected Output</th></tr>
+<tr><td>Week 1</td><td>Contract: <code>cancel_listing</code>, payment deadline and <code>claim_refund</code>, two-step administrator handover, with tests. Redeploy to testnet, regenerate the typed client, connect the new functions in the app.</td><td>Updated contract live on a new testnet contract ID; all tests passing; cancel and buyer-claimed refund demonstrated on testnet.</td></tr>
+<tr><td>Week 2</td><td>Deploy backend (HTTPS) and web app (Vercel). Test-USDC faucet with per-wallet cap. Production configuration, backup procedure, administrator overdue queue.</td><td>Public app URL; a fresh wallet can be set up and funded with test USDC entirely in the app.</td></tr>
+<tr><td>Week 3</td><td>Release the Midnight Galaxy interface. Per-listing on-chain history with Stellar Expert links, faucet step in the wallet checklist, status explanations, deadline countdown, Claim refund and Cancel listing actions. Accessibility and phone checks.</td><td>New interface live on the deployed app; every listing shows its full on-chain history.</td></tr>
+<tr><td>Week 4</td><td>Onboard at least 20 external testers through Stellar Philippines and guide them through full sales as buyers and sellers. Collect transaction hashes. Run the follow-up survey. Publish the demo video, tester and administrator guides, and threat model.</td><td>At least 20 testers, 20 wallets, 20 full sales and 100 testnet transactions; published video, guides and survey results.</td></tr>
+</table>
+
+<h2>6. Evidence of Completion (Required)</h2>
+<p><b>Important guidance:</b> Evidence should be clear, verifiable, and easy to review by the Ambassador Chapter Lead <b>with minimal technical expertise</b>.</p>
+<h3>6.1 Planned Evidence to Be Submitted</h3>
+<table>
+<tr><th style="width:16%">Deliverable</th><th class="c" style="width:34%">Evidence Type<br><span style="font-weight:normal">(link, repo, demo, screenshot, doc, tx hash, etc.)</span></th><th>Description</th></tr>
+<tr><td>Deliverable 1</td><td>Repo PRs · contract ID · tx hashes · test output</td><td>Merged PRs with the new functions and tests; <code>cargo test</code> output; the new testnet contract ID on Stellar Expert; transactions showing a cancelled listing, a buyer-claimed refund after the deadline, and a rejected early refund claim.</td></tr>
+<tr><td>Deliverable 2</td><td>Live URL · repo PRs · screen recording · tx hashes</td><td>Public app URL; a recording of a brand-new wallet being funded, given a trustline and receiving test USDC in the app; faucet transactions on Stellar Expert; the backup and rate-limit configuration in the repository.</td></tr>
+<tr><td>Deliverable 3</td><td>Repo PRs · live URL · screenshots</td><td>Merged interface PRs; desktop and phone screenshots of Tickets, Listing (with on-chain history), Sell, My activity and Admin in all three themes.</td></tr>
+<tr><td>Deliverable 4</td><td>Demo video · guides · tx-hash list · survey export</td><td>A 3–5 minute demo video; the tester guide, administrator guide and threat model; a list of at least 100 testnet transaction hashes across at least 20 tester wallets; exported survey responses.</td></tr>
+<tr><td>Repositories &amp; Deployments</td><td>GitHub repo · live app · on-chain proofs</td><td>Repository (MIT): github.com/mater-wee/GOIN. Live app: [TO ADD: public URL after Week 2]. Current testnet contract: <code>CCGP3BS7EB37RRVJLL4HLZ6KEZX2TEM3U6SNWLNKDIFPDHSYKCP2R5YI</code>; the updated contract's ID will be added at submission. No mainnet contract is deployed or requested.</td></tr>
+</table>
+
+<h3>6.2 Evidence Verification Checklist (For Ambassador Use)</h3>
+<p>For each deliverable, the Ambassador Chapter Lead will assess whether evidence is present and sufficient.</p>
+<table>
+<tr><th>Deliverable</th><th class="c">Evidence Present</th><th class="c">Evidence Partial</th><th class="c">Evidence Missing</th><th>Comments</th></tr>
+<tr><td>Deliverable 1</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>Deliverable 2</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>Deliverable 3</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>Deliverable 4</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+<tr><td>Repositories &amp; Deployments</td><td class="c">☐</td><td class="c">☐</td><td class="c">☐</td><td></td></tr>
+</table>
+
+<h3>6.3 Success Metrics</h3>
+<table>
+<tr><th style="width:22%">Category</th><th>Metric</th><th style="width:12%">Target</th></tr>
+<tr><td>Adoption targets</td><td>New external testers completing a full sale on testnet (as buyer or seller)</td><td>≥ 20</td></tr>
+<tr><td>Adoption targets</td><td>Unique external tester wallet addresses with a USDC trustline</td><td>≥ 20</td></tr>
+<tr><td>Adoption targets</td><td>Survey responses collected</td><td>≥ 20</td></tr>
+<tr><td>Adoption targets</td><td>Average product rating (no baseline yet; set by this sprint)</td><td>≥ 4.0 / 5</td></tr>
+<tr><td>Transaction targets</td><td>Listings created by testers</td><td>≥ 20</td></tr>
+<tr><td>Transaction targets</td><td>Full sale lifecycles ending in Settled or Refunded</td><td>≥ 20</td></tr>
+<tr><td>Transaction targets</td><td>Total testnet transactions on the GOIN contract from testers</td><td>≥ 100</td></tr>
+<tr><td>Technical milestones</td><td>Cancel listing, deadline refund and administrator handover live on testnet, with tests</td><td>Yes</td></tr>
+<tr><td>Technical milestones</td><td>Buyer-claimed refund and seller cancellation each demonstrated on testnet</td><td>Yes</td></tr>
+<tr><td>Technical milestones</td><td>Public app URL with in-app test-USDC faucet</td><td>Yes</td></tr>
+<tr><td>Technical milestones</td><td>New interface live, with on-chain history on every listing</td><td>Yes</td></tr>
+<tr><td>Technical milestones</td><td>Demo video, tester guide, administrator guide and threat model published</td><td>Yes</td></tr>
+<tr><td>Technical milestones</td><td>All source code released under the MIT License</td><td>Yes</td></tr>
+</table>
+
+<h2>7. Security Considerations</h2>
+<h3>7.1 Risks &amp; Mitigations</h3>
+<table>
+<tr><th style="width:34%">Risk</th><th>Mitigation</th></tr>
+<tr><td>The administrator key is lost, compromised or unresponsive</td><td>Two-step administrator handover; buyer-claimable refund when the seller has not started the transfer; testnet only. Multi-party confirmation is roadmap work.</td></tr>
+<tr><td>A seller lists a fake or already-used ticket</td><td>Administrator evidence review, OCR mismatch flags, one listing per <code>ticket_ref</code>, and payment held by the contract until transfer is confirmed. GOIN does not claim approval proves authenticity.</td></tr>
+<tr><td>A buyer's payment is stuck in the contract</td><td>The new deadline lets the buyer claim a full refund if the transfer was not started; the administrator can refund at any point before settlement.</td></tr>
+<tr><td>The refund deadline is abused by a buyer after a real transfer</td><td><code>claim_refund</code> only works while the listing is still in <code>PaymentCommitted</code>; once the seller signs <code>start_transfer</code>, only the administrator can decide.</td></tr>
+<tr><td>The test-USDC faucet is drained</td><td>Per-wallet cap, signed-in requests only, rate limits and a daily cap; test asset only.</td></tr>
+<tr><td>Personal data in receipts leaks</td><td>Evidence and order numbers stay off-chain and are shown only to the seller and administrator; AI receives text only and only when enabled; backups are kept private.</td></tr>
+<tr><td>A contract change introduces a bug</td><td>Small, additive functions with unit tests for every path; existing functions unchanged; testnet only; professional audit required before mainnet.</td></tr>
+<tr><td>The validation cohort does not materialise</td><td>Testers are recruited through the Stellar Philippines chapter and use free testnet funds, so they pay nothing.</td></tr>
+</table>
+
+<h3>7.2 Security Controls</h3>
+<ul>
+<li><b>Non-custodial keys:</b> users sign every action in their own Freighter wallet; GOIN never holds user keys.</li>
+<li><b>Contract-held escrow:</b> the buyer's USDC is held by the GOIN contract, not by the seller or the team, and moves only through <code>confirm_transfer</code>, <code>claim_refund</code> or the refund path.</li>
+<li><b>Rules enforced on-chain:</b> price cap, duplicate block, status order, seller cannot buy own listing, and caller checks on every function.</li>
+<li><b>Minimal on-chain data:</b> only a hash of the ticket record, prices, addresses and status.</li>
+<li><b>Backend controls:</b> SEP-53 wallet sign-in with hashed session tokens and expiry, file-type checks on uploads, chain-checked draft linking, seller/administrator-only access to evidence, and rate limits.</li>
+<li><b>Testnet only:</b> all testing, validation and transactions in this award are on Stellar testnet with a test USDC asset.</li>
+</ul>
+
+<h2>8. Final Success Criteria</h2>
+<p>This Instaward will be considered complete when all of the following criteria are met and can be independently verified:</p>
+<ul>
+<li><b>All four deliverables are shipped:</b> the buyer-protection contract update, the public deployment with self-service onboarding, the new interface with on-chain history, and the validation package are merged into the public repository under the MIT License.</li>
+<li><b>External validation targets are met:</b>
+<ul>
+<li>At least 20 new external testers complete a full sale on testnet.</li>
+<li>At least 20 full sale lifecycles end in Settled or Refunded, from at least 20 tester wallets.</li>
+<li>At least 100 testnet transactions are submitted through the GOIN contract.</li>
+<li>The follow-up survey has at least 20 responses averaging at least 4.0 out of 5.</li>
+</ul></li>
+<li><b>Buyer protection is demonstrated:</b> a seller cancellation and a buyer-claimed refund after the deadline are visible on Stellar Expert.</li>
+<li><b>The work is publicly checkable:</b> the live app, the contract IDs, the transaction list on Stellar Expert, the demo video and the guides are all open without an account.</li>
+</ul>
+
+<h2>9. Next-Step Alignment</h2>
+<h3>9.1 Anticipated Next Step After Completion</h3>
+<p>After this Instaward, the most likely next step is:</p>
+<p style="margin-left:40px">☒ Apply to SCF Build Award<br>☐ Continue development independently<br>☒ Apply for a follow-on Instaward (if eligible)<br>☐ Seek other ecosystem support<br>☐ Other:</p>
+<p>Planned follow-ons: an Instaward for multi-party transfer confirmation and a pilot with an independent event organizer. An SCF Build Award would fund ticket-provider integration, production storage, the professional audit, legal review, and a mainnet launch with USDC.</p>
+
+<h2>10. Instawards Constraints Acknowledgement</h2>
+<p>By submitting this SOW, the Builder acknowledges:</p>
+<p style="margin-left:40px">☒ This scope will be completed within <b>30 days or less</b>.<br>☒ Instawards support execution, not open-ended exploration.<br>☒ A project may receive <b>no more than two follow-on Instawards</b>.<br>☒ Each Instaward is capped at <b>$5,000</b>. (This proposal requests $5,000 — within the per-award cap.)<br>☒ Total Instawards funding may not exceed <b>$15,000</b>.</p>
+
+<h2>11. Submission Confirmation</h2>
+<p>Once finalized, this Statement of Work will be submitted by the Ambassador Chapter Lead via the Instawards Airtable submission form for review and approval.</p>
+
+<h3>A.1 Basis of Estimate</h3>
+<table>
+<tr><th style="width:34%">Parameter</th><th>Value</th></tr>
+<tr><td>Sprint duration</td><td>30 days (4 working weeks)</td></tr>
+<tr><td>Team</td><td>2 members (Ma. Theresa Gila, Excelsis Christi Valencia)</td></tr>
+<tr><td>Hourly rate (all work)</td><td>$25 / hour — one flat rate for every hour in this budget</td></tr>
+<tr><td>Development (full-stack + chain integration)</td><td>$3,750 — 150 hours</td></tr>
+<tr><td>QA &amp; testing</td><td>$1,250 — 50 hours of contract, API, faucet, cross-browser, phone and end-to-end testnet validation runs</td></tr>
+<tr><td>Non-build spend</td><td>$0 — no marketing, airdrop, paid infrastructure or subscription cost is included</td></tr>
+<tr><td>Total</td><td>$5,000 USD (paid in XLM) — 200 hours × $25/hour</td></tr>
+</table>
+
+<h3>A.2 Cost by Deliverable (development — $3,750, 150 hours at $25/hour)</h3>
+<p>Deliverable 1 — Buyer-protection contract update — $1,000 (40 hrs)</p>
+<table>
+<tr><th>Work package</th><th style="width:10%">Hrs</th><th style="width:14%">Cost</th></tr>
+<tr><td><code>cancel_listing</code> for unsold listings</td><td>6</td><td>$150</td></tr>
+<tr><td>Payment deadline at purchase and buyer <code>claim_refund</code></td><td>12</td><td>$300</td></tr>
+<tr><td>Two-step administrator handover</td><td>6</td><td>$150</td></tr>
+<tr><td>Unit tests for every new path, alongside the existing 5</td><td>8</td><td>$200</td></tr>
+<tr><td>Testnet redeploy, regenerated typed client, app wiring, README update</td><td>8</td><td>$200</td></tr>
+<tr><td>Subtotal</td><td>40</td><td>$1,000</td></tr>
+</table>
+<p>Deliverable 2 — Public deployment and self-service onboarding — $1,000 (40 hrs)</p>
+<table>
+<tr><th>Work package</th><th style="width:10%">Hrs</th><th style="width:14%">Cost</th></tr>
+<tr><td>HTTPS backend deployment and Vercel web app, environment configuration</td><td>10</td><td>$250</td></tr>
+<tr><td>Test-USDC faucet with per-wallet and daily caps</td><td>10</td><td>$250</td></tr>
+<tr><td>Faucet rate limit; proxy and CORS configuration for the existing rate limits</td><td>5</td><td>$125</td></tr>
+<tr><td>Database and evidence backup procedure</td><td>3</td><td>$75</td></tr>
+<tr><td>Administrator queue for overdue and transfer-started listings</td><td>8</td><td>$200</td></tr>
+<tr><td>Health check, error logging and deployment README</td><td>4</td><td>$100</td></tr>
+<tr><td>Subtotal</td><td>40</td><td>$1,000</td></tr>
+</table>
+<p>Deliverable 3 — Transaction clarity and interface release — $1,000 (40 hrs)</p>
+<table>
+<tr><th>Work package</th><th style="width:10%">Hrs</th><th style="width:14%">Cost</th></tr>
+<tr><td>Finalize, review and release the Midnight Galaxy interface</td><td>10</td><td>$250</td></tr>
+<tr><td>Per-listing on-chain history with Stellar Expert links</td><td>10</td><td>$250</td></tr>
+<tr><td>Wallet-setup checklist extended with the faucet step and clearer errors</td><td>8</td><td>$200</td></tr>
+<tr><td>Status explanations, deadline countdown, Claim refund and Cancel listing actions</td><td>8</td><td>$200</td></tr>
+<tr><td>Accessibility and phone layout pass</td><td>4</td><td>$100</td></tr>
+<tr><td>Subtotal</td><td>40</td><td>$1,000</td></tr>
+</table>
+<p>Deliverable 4 — Validation and documentation, development portion — $750 (30 hrs)</p>
+<table>
+<tr><th>Work package</th><th style="width:10%">Hrs</th><th style="width:14%">Cost</th></tr>
+<tr><td>End-to-end integration across D1–D3 on the deployed app</td><td>8</td><td>$200</td></tr>
+<tr><td>Cohort onboarding support (at least 20 testers)</td><td>10</td><td>$250</td></tr>
+<tr><td>Tester guide, administrator guide and threat model</td><td>6</td><td>$150</td></tr>
+<tr><td>Demo video, transaction-hash list and survey collation</td><td>6</td><td>$150</td></tr>
+<tr><td>Subtotal</td><td>30</td><td>$750</td></tr>
+</table>
+<p>Development total: 150 hours, $3,750. QA and testing is itemised in A.3.</p>
+
+<h3>A.3 Cost by Category (reconciles to SOW §4.2)</h3>
+<table>
+<tr><th style="width:24%">Category (SOW §4.2 line)</th><th>Components</th><th style="width:13%">Amount</th></tr>
+<tr><td>Development (full-stack + chain integration)</td><td>D1 $1,000 + D2 $1,000 + D3 $1,000 + D4 $750: 150 hours at $25/hour</td><td>$3,750</td></tr>
+<tr><td>QA &amp; testing</td><td>Contract tests and testnet runs of every path (14 h); API, faucet and rate-limit tests (12 h); interface, cross-browser and phone checks (12 h); cohort validation runs (12 h): 50 hours at $25/hour</td><td>$1,250</td></tr>
+<tr><td>Total</td><td>200 hours at $25/hour</td><td>$5,000</td></tr>
+</table>
+
+<h3>A.4 Cost by Week (timeline-aligned)</h3>
+<table>
+<tr><th>Week (SOW §5.1)</th><th>Primary work</th><th>Development</th><th>QA &amp; testing</th><th>Week total</th></tr>
+<tr><td>Week 1 (D1–7) — contract update</td><td>Deliverable 1</td><td>$1,000 (40 hrs)</td><td>$350 (14 hrs)</td><td>$1,350 (54 hrs)</td></tr>
+<tr><td>Week 2 (D8–14) — deployment and onboarding</td><td>Deliverable 2</td><td>$1,000 (40 hrs)</td><td>$300 (12 hrs)</td><td>$1,300 (52 hrs)</td></tr>
+<tr><td>Week 3 (D15–21) — interface and history</td><td>Deliverable 3</td><td>$1,000 (40 hrs)</td><td>$300 (12 hrs)</td><td>$1,300 (52 hrs)</td></tr>
+<tr><td>Week 4 (D22–30) — validation and documentation</td><td>Deliverable 4</td><td>$750 (30 hrs)</td><td>$300 (12 hrs)</td><td>$1,050 (42 hrs)</td></tr>
+<tr><td>Total</td><td></td><td>$3,750 (150 hrs)</td><td>$1,250 (50 hrs)</td><td>$5,000 (200 hrs)</td></tr>
+</table>
+
+</body></html>
