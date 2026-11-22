@@ -1,0 +1,222 @@
+/* Design tokens. Midnight Galaxy is the default and lives in :root, so it also applies
+   if data-theme is missing. The other themes override color, shadow, gradient, and
+   decoration tokens only (plus color-scheme). This is the only file with [data-theme=]
+   selectors; index.html sets the attribute before the first paint. */
+
+:root {
+  /* Layout */
+  --container: 1200px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --header-h: 72px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radii */
+  --radius-sm: 10px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Type */
+  --font-sans: "Inter Variable", "Inter", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+    "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, Menlo, "Cascadia Code", Consolas, monospace;
+  --fs-hero: clamp(2.5rem, 1.55rem + 3.1vw, 4.25rem);
+  --fs-h1: clamp(1.875rem, 1.5rem + 1vw, 2.375rem);
+  --fs-h2: 1.5rem;
+  --fs-h3: 1.125rem;
+  --fs-body: 1rem;
+  --fs-lead: 1.1875rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 150ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+  --dur-reveal: 640ms;
+
+  /* Stacking */
+  --z-header: 20;
+  --z-decor: -1;
+
+  /* Midnight Galaxy colors */
+  color-scheme: dark;
+  --bg: #080711;
+  --sidebar: #0d0b1c;
+  --surface: #17102e;
+  --surface-2: #211a38;
+  --border: #30264c;
+  --border-strong: #463a6b;
+  --accent: #914cf5;
+  --accent-2: #c44be5;
+  --accent-text: #b98af8;
+  --accent-soft: #2a1a4f;
+  --text: #f8f7ff;
+  --text-2: #aaa5c2;
+  --on-accent: #ffffff;
+  --input-bg: #0f0b21;
+  --input-border: #7a6aa8;
+  --focus: #b98af8;
+  --good: #3ecf8e;
+  --good-soft: #10291c;
+  --bad: #ff6b81;
+  --bad-soft: #3a1720;
+  --warn: #f0b04a;
+  --warn-soft: #30230c;
+  --warn-text: #f5c97a;
+  --warn-border: #5a4318;
+  --info: #6aa8ff;
+  --info-soft: #132540;
+  --on-solid: #080711;
+
+  /* Midnight Galaxy gradients, shadows, decoration */
+  --grad-primary: linear-gradient(135deg, #7040d8 0%, #914cf5 100%);
+  --grad-text: linear-gradient(100deg, #914cf5 0%, #c44be5 55%, #d879d9 100%);
+  --grad-feature: linear-gradient(155deg, #2a1a57 0%, #1b1238 45%, #17102e 100%);
+  --border-feature: #4a2f86;
+  --page-glow: radial-gradient(1100px 640px at 88% -12%, rgb(112 64 216 / 0.16), transparent 62%),
+    radial-gradient(900px 600px at -8% 108%, rgb(196 75 229 / 0.07), transparent 60%);
+  --shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.7);
+  --shadow-lg: 0 24px 48px -16px rgb(0 0 0 / 0.75), 0 0 0 1px rgb(145 76 245 / 0.18);
+  --shadow-btn: 0 8px 22px -8px rgb(112 64 216 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.18);
+  --stars-display: block;
+  --hero-glow-a: rgb(145 76 245 / 0.3);
+  --hero-glow-b: rgb(196 75 229 / 0.18);
+  --hero-glow-c: rgb(83 111 234 / 0.12);
+  --sphere: radial-gradient(circle at 34% 30%, #b98af8 0%, #914cf5 18%, #5b2db8 42%, #2a1660 66%, #120b26 78%);
+  --sphere-glow: rgb(145 76 245 / 0.45);
+  --orbit: rgb(216 121 217 / 0.38);
+  --card-face-front: linear-gradient(135deg, #914cf5 0%, #7040d8 40%, #c44be5 85%, #d879d9 100%);
+  --card-face-back: linear-gradient(135deg, #38206f 0%, #7040d8 55%, #c44be5 100%);
+  --card-shadow: 0 30px 60px -20px rgb(8 7 17 / 0.85), 0 12px 30px -12px rgb(112 64 216 / 0.5);
+  --dots: #914cf5;
+  --dots-opacity: 0.55;
+  --grain-opacity: 0.06;
+  --planet-edge-opacity: 0.6;
+  --planet-small: radial-gradient(circle at 35% 30%, #a9b8ff, #536fea 45%, #2a1660 85%);
+}
+
+:root[data-theme="lavender"] {
+  color-scheme: light;
+  --bg: #f6f5fc;
+  --sidebar: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f0edfa;
+  --border: #e5e0f1;
+  --border-strong: #d4cceb;
+  --accent: #7048e8;
+  --accent-2: #a65bea;
+  --accent-text: #7048e8;
+  --accent-soft: #ede7fd;
+  --text: #17152e;
+  --text-2: #6a6883;
+  --on-accent: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #8e88a8;
+  --focus: #7048e8;
+  --good: #0b7a53;
+  --good-soft: #e3f6ee;
+  --bad: #c62f45;
+  --bad-soft: #fde8eb;
+  --warn: #8a5200;
+  --warn-soft: #fff2dc;
+  --warn-text: #6b4300;
+  --warn-border: #f3d9a8;
+  --info: #1f66c7;
+  --info-soft: #e5effc;
+  --on-solid: #ffffff;
+
+  --grad-primary: linear-gradient(135deg, #7048e8, #8253ee);
+  --grad-text: linear-gradient(100deg, #7048e8 0%, #a65bea 100%);
+  --grad-feature: linear-gradient(155deg, #f1ecff 0%, #ffffff 60%);
+  --border-feature: #d9ccfa;
+  --page-glow: radial-gradient(1100px 640px at 88% -12%, rgb(112 72 232 / 0.1), transparent 62%),
+    radial-gradient(900px 600px at -8% 108%, rgb(166 91 234 / 0.06), transparent 60%);
+  --shadow-sm: 0 1px 2px rgb(23 21 46 / 0.05), 0 8px 24px -14px rgb(112 72 232 / 0.18);
+  --shadow-lg: 0 20px 40px -18px rgb(112 72 232 / 0.28);
+  --shadow-btn: 0 6px 16px -8px rgb(112 72 232 / 0.45), inset 0 1px 0 rgb(255 255 255 / 0.2);
+  --stars-display: none;
+  --hero-glow-a: rgb(112 72 232 / 0.16);
+  --hero-glow-b: rgb(166 91 234 / 0.12);
+  --hero-glow-c: rgb(83 111 234 / 0.08);
+  --sphere: radial-gradient(circle at 34% 30%, #ffffff 0%, #e3d8fd 25%, #c3aef6 55%, #a78bef 78%);
+  --sphere-glow: rgb(112 72 232 / 0.22);
+  --orbit: rgb(112 72 232 / 0.3);
+  --card-face-front: linear-gradient(135deg, #8a6bf0 0%, #7048e8 45%, #a65bea 100%);
+  --card-face-back: linear-gradient(135deg, #c9b6fa 0%, #9c7cf2 60%, #b98af8 100%);
+  --card-shadow: 0 26px 50px -22px rgb(112 72 232 / 0.4);
+  --dots: #7048e8;
+  --dots-opacity: 0.3;
+  --grain-opacity: 0.025;
+  --planet-edge-opacity: 0.35;
+  --planet-small: radial-gradient(circle at 35% 30%, #ffffff, #c9b6fa 45%, #7048e8 90%);
+}
+
+:root[data-theme="graphite"] {
+  color-scheme: dark;
+  --bg: #191b22;
+  --sidebar: #20232c;
+  --surface: #272a35;
+  --surface-2: #303440;
+  --border: #414654;
+  --border-strong: #525868;
+  --accent: #9579ef;
+  --accent-2: #a7a2c0;
+  --accent-text: #b5a2f5;
+  --accent-soft: #36325a;
+  --text: #f1f2f6;
+  --text-2: #a6abb8;
+  --on-accent: #ffffff;
+  --input-bg: #20232c;
+  --input-border: #6f7588;
+  --focus: #b5a2f5;
+  --good: #3ecf8e;
+  --good-soft: #10291c;
+  --bad: #ff6b81;
+  --bad-soft: #3a1720;
+  --warn: #f0b04a;
+  --warn-soft: #30230c;
+  --warn-text: #f5c97a;
+  --warn-border: #5a4318;
+  --info: #6aa8ff;
+  --info-soft: #132540;
+  --on-solid: #191b22;
+
+  --grad-primary: linear-gradient(135deg, #6a4fd8, #7558e0);
+  --grad-text: linear-gradient(100deg, #b5a2f5 0%, #a7a2c0 100%);
+  --grad-feature: linear-gradient(155deg, #2f2e45 0%, #272a35 60%);
+  --border-feature: #4a4766;
+  --page-glow: radial-gradient(1100px 640px at 88% -12%, rgb(149 121 239 / 0.06), transparent 62%);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 20px -12px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 18px 36px -16px rgb(0 0 0 / 0.6);
+  --shadow-btn: 0 6px 14px -8px rgb(0 0 0 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.12);
+  --stars-display: none;
+  --hero-glow-a: rgb(149 121 239 / 0.14);
+  --hero-glow-b: rgb(167 162 192 / 0.08);
+  --hero-glow-c: transparent;
+  --sphere: radial-gradient(circle at 34% 30%, #b5a2f5 0%, #7a69c2 25%, #4a4766 55%, #2b2d3a 78%);
+  --sphere-glow: rgb(149 121 239 / 0.18);
+  --orbit: rgb(167 162 192 / 0.28);
+  --card-face-front: linear-gradient(135deg, #6a57c8 0%, #4e4a78 50%, #9579ef 100%);
+  --card-face-back: linear-gradient(135deg, #3a3f52 0%, #565b78 60%, #7a69c2 100%);
+  --card-shadow: 0 26px 50px -20px rgb(0 0 0 / 0.6);
+  --dots: #9579ef;
+  --dots-opacity: 0.3;
+  --grain-opacity: 0.04;
+  --planet-edge-opacity: 0.3;
+  --planet-small: radial-gradient(circle at 35% 30%, #d6d3e4, #a7a2c0 45%, #4a4766 90%);
+}

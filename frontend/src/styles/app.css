@@ -1,0 +1,374 @@
+/* App pages: Browse grid and steps, listing cards, Listing detail (facts, timeline),
+   receipt checks, admin review, evidence. */
+
+/* ---------- Sections ---------- */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: var(--space-12) 0 var(--space-5);
+}
+.section-head h1,
+.section-head h2 {
+  margin: 0;
+}
+.subsection {
+  margin-top: var(--space-10);
+}
+.footnote {
+  margin-top: var(--space-6);
+}
+
+/* ---------- Lists ---------- */
+.steps,
+.timeline,
+.checks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ---------- How it works (Browse) ---------- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.step {
+  display: flex;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.step p {
+  margin: 0.25rem 0 0;
+}
+.step-number {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  color: var(--on-accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ---------- Listing grid and cards ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr));
+  gap: var(--space-5);
+}
+.listing-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  margin: 0;
+  transition:
+    transform var(--dur) var(--ease-out),
+    border-color var(--dur);
+}
+/* Hover elevation via pseudo-element opacity, so box-shadow is never transitioned. */
+.listing-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+  pointer-events: none;
+}
+.listing-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+}
+.listing-card:hover::after {
+  opacity: 1;
+}
+.listing-card h3,
+.listing-card p {
+  margin: 0;
+}
+.listing-card h3 {
+  font-size: var(--fs-h3);
+  overflow-wrap: anywhere;
+}
+.listing-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.listing-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 1.15rem;
+}
+.listing-card-price strong {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.issue-flag,
+.issue-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.issue-flag {
+  color: var(--warn);
+  font-weight: 600;
+}
+.issue-clear {
+  color: var(--good);
+}
+
+/* ---------- Listing detail ---------- */
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: var(--space-8);
+  align-items: start;
+}
+.detail-main,
+.detail-side {
+  min-width: 0;
+}
+.detail-side {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1rem;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.back:hover {
+  color: var(--text);
+}
+.detail-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+.detail-title h1 {
+  margin: 0;
+}
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+.facts > div {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+}
+.facts dt {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-2);
+}
+.facts dd {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.facts-chain dd {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+/* ---------- Status timeline ---------- */
+.timeline-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0 0.5rem 2.25rem;
+  color: var(--text-2);
+}
+/* Connector from this dot's center to the next one. The dot sits on top of it. */
+.timeline-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  width: 2px;
+  height: 100%;
+  background: var(--border);
+}
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: calc(50% - 12px);
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: var(--surface);
+}
+.step-done {
+  color: var(--text);
+}
+.timeline-step.step-done:not(:last-child)::before {
+  background: var(--good);
+}
+.step-done .timeline-dot {
+  background: var(--good);
+  border-color: var(--good);
+  color: var(--on-solid);
+}
+.step-current {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.step-current .timeline-dot {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.step-failed {
+  color: var(--bad);
+  font-weight: 600;
+}
+.step-failed .timeline-dot {
+  background: var(--bad);
+  border-color: var(--bad);
+  color: var(--on-solid);
+}
+
+/* ---------- Receipt checks ---------- */
+.checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.5rem 0 1rem;
+}
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.9rem;
+}
+.check-icon {
+  flex: none;
+  margin-top: 2px;
+}
+.check-ok .check-icon {
+  color: var(--good);
+}
+.check-warn .check-icon {
+  color: var(--warn);
+}
+.check-missing .check-icon {
+  color: var(--text-2);
+}
+
+/* ---------- Admin review ---------- */
+.review {
+  margin: var(--space-3) 0;
+}
+.review h4 {
+  margin-top: var(--space-4);
+}
+.compare {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+.compare th,
+.compare td {
+  text-align: left;
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.compare thead th {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+}
+.compare tbody th {
+  font-weight: 600;
+  color: var(--text-2);
+}
+.ocr-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 220px;
+  overflow: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem;
+  font-size: 0.78rem;
+}
+.evidence {
+  margin: 0.75rem 0;
+}
+.evidence img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* ---------- Overflow guards for long addresses ---------- */
+.card .small a {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .detail-side {
+    position: static;
+  }
+}
+@media (max-width: 639px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

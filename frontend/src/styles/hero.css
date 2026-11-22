@@ -1,0 +1,25 @@
+/* Homepage hero. INTERIM rules: the two-column hero, its backdrop, and HeroVisual replace
+   this whole file. Everything below is temporary so / stays presentable meanwhile. */
+
+.hero {
+  padding-block: var(--space-12) var(--space-8);
+}
+.hero h1 {
+  font-size: var(--fs-hero);
+  max-width: 18ch;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-10);
+}
+
+/* Interim while routes still render directly in <main class="container main">: top spacing,
+   and full width (as a flex item of .app, auto inline margins would shrink main to its
+   content). Once main drops .container and routes are wrapped in .container.page, this
+   selector no longer matches. */
+.main.container {
+  width: 100%;
+  padding-top: var(--space-8);
+}

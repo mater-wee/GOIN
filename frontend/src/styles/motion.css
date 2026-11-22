@@ -1,0 +1,39 @@
+/* Motion: keyframes and animations. Keyframes animate only transform, translate, scale,
+   or opacity. Everything here is switched off under prefers-reduced-motion. */
+
+/* Star twinkle (Midnight Galaxy only, the layers are hidden elsewhere by --stars-display). */
+.stars-twinkle-a {
+  animation: twinkle 4.5s ease-in-out infinite;
+}
+.stars-twinkle-b {
+  animation: twinkle 6s ease-in-out 2s infinite;
+}
+.stars-bright {
+  animation: twinkle 8s ease-in-out 1s infinite;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stars {
+    animation: none !important;
+  }
+  .btn,
+  .listing-card,
+  .nav a {
+    transition-property: background-color, border-color, color, opacity;
+  }
+  /* Same specificity as the .btn-primary hover/press rules, which come earlier. */
+  .btn:hover:not(:disabled),
+  .btn:active:not(:disabled),
+  .listing-card:hover {
+    transform: none;
+  }
+}

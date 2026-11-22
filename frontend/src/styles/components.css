@@ -1,0 +1,602 @@
+/* Shared components: header, theme switcher, wallet, banner, footer, buttons, cards,
+   badges, notices, hints, checklists, forms, spinner, empty state. */
+
+/* ---------- Header ---------- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: var(--sidebar);
+  border-bottom: 1px solid var(--border);
+  transition:
+    background-color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+/* Only on / while the page is scrolled to the top (set by Header). */
+.header[data-overlay="true"] {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+.header-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  grid-template-areas: "brand nav theme wallet";
+  align-items: center;
+  column-gap: var(--space-6);
+  height: var(--header-h);
+}
+
+.brand {
+  grid-area: brand;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  text-decoration: none;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--grad-primary);
+  color: var(--on-accent);
+  font-size: 0.95rem;
+  box-shadow: var(--shadow-btn);
+}
+
+/* The nav scrolls inside its grid area when the links don't fit. The 4px padding keeps the
+   focus ring inside the scroll container; the equal negative margin keeps the layout unchanged. */
+.nav {
+  grid-area: nav;
+  display: flex;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px;
+  margin: -4px;
+  scroll-padding-inline: 4px;
+}
+.nav::-webkit-scrollbar {
+  display: none;
+}
+.nav a {
+  flex: none;
+  white-space: nowrap;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-2);
+  text-decoration: none;
+  font-weight: 510;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.nav a:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.nav a.active {
+  color: var(--accent-text);
+  background: var(--accent-soft);
+}
+
+/* ---------- Theme switcher (radio group) ---------- */
+.theme-switch {
+  grid-area: theme;
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  margin: 0;
+  padding: 3px;
+  min-inline-size: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+.theme-switch label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--text-2);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.theme-switch label:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.theme-switch label[data-checked] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.theme-switch label:has(input:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+@supports not selector(:has(*)) {
+  .theme-switch input:focus-visible + .icon {
+    outline: 2px solid var(--focus);
+    outline-offset: 6px;
+    border-radius: 50%;
+  }
+}
+
+/* ---------- Wallet ---------- */
+.wallet,
+.wallet-connect {
+  grid-area: wallet;
+}
+.wallet {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.wallet-address {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Banner (the strip is .banner > .container) ---------- */
+.banner {
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: var(--space-2) var(--gutter) 0;
+  font-size: 0.925rem;
+}
+.banner > .container {
+  max-width: calc(var(--container) - 2 * var(--gutter));
+  padding: 0.65rem 1rem;
+  background: var(--warn-soft);
+  color: var(--warn-text);
+  border: 1px solid var(--warn-border);
+  border-radius: var(--radius);
+  font-size: 0.925rem;
+}
+.banner a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--sidebar);
+  border-top: 1px solid var(--border);
+  padding: var(--space-6) 0;
+  color: var(--text-2);
+  font-size: var(--fs-small);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font: 600 0.9375rem / 1.2 var(--font-sans);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast),
+    border-color var(--dur-fast),
+    color var(--dur-fast);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-primary {
+  background: var(--grad-primary);
+  color: var(--on-accent);
+  box-shadow: var(--shadow-btn);
+}
+/* Hover elevation lives on a pseudo-element, so box-shadow is never transitioned. */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease-out);
+  pointer-events: none;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.btn-primary:hover:not(:disabled)::after {
+  opacity: 1;
+}
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+.btn-secondary {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+.btn-danger {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+.btn-danger:hover:not(:disabled) {
+  border-color: currentColor;
+}
+.btn-small {
+  min-height: 34px;
+  padding: 0.375rem 0.85rem;
+  font-size: 0.85rem;
+}
+.btn-large {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.85rem 1.2rem;
+  font-size: 1rem;
+}
+.btn-hero {
+  min-height: 54px;
+  padding: 0.75rem 1.6rem;
+  font-size: 1rem;
+}
+.btn-primary.btn-hero .icon {
+  transition: translate var(--dur-fast) var(--ease-out);
+}
+.btn-primary.btn-hero:hover:not(:disabled) .icon {
+  translate: 3px 0;
+}
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-4);
+}
+.card p:first-of-type {
+  margin-top: 0;
+}
+/* The Listing page action panel: the only gradient card on app pages. */
+.card-feature {
+  background: var(--grad-feature);
+  border-color: var(--border-feature);
+}
+.card-admin {
+  background: var(--surface);
+  border-color: var(--border-feature);
+  box-shadow:
+    inset 3px 0 0 var(--accent),
+    var(--shadow-sm);
+}
+.card-warn {
+  background: var(--warn-soft);
+  border-color: var(--warn-border);
+  box-shadow: none;
+}
+
+/* ---------- Badges, pills, counts ---------- */
+.badge,
+.pill {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pill {
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+.pill-good {
+  margin-left: 0.5rem;
+  background: var(--good-soft);
+  color: var(--good);
+  border-color: transparent;
+}
+.badge-good {
+  background: var(--good-soft);
+  color: var(--good);
+}
+.badge-bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+.badge-warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.badge-info {
+  background: var(--info-soft);
+  color: var(--info);
+}
+.badge-neutral {
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+.count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-radius: var(--radius-pill);
+  padding: 0.05rem 0.55rem;
+  vertical-align: middle;
+}
+
+/* ---------- Notices ---------- */
+.notice {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  font-size: 0.925rem;
+  margin: 0.75rem 0;
+}
+.notice-good {
+  background: var(--good-soft);
+  color: var(--good);
+}
+.notice-bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+.notice-info {
+  background: var(--info-soft);
+  color: var(--info);
+}
+/* A warning line with a leading icon: wrapped text stays aligned right of the icon. */
+.notice-line {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.notice-line .icon {
+  margin-top: 0.15em;
+}
+
+/* ---------- Hints ---------- */
+.hint {
+  font-weight: 400;
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+.hint-ai {
+  color: var(--good);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hint-warn {
+  color: var(--warn);
+}
+
+/* ---------- Account checklist ---------- */
+.checklist {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius);
+  margin: 0.75rem 0;
+}
+.checklist p {
+  margin: 0 0 0.6rem;
+}
+.checklist-ok {
+  background: var(--good-soft);
+  color: var(--good);
+}
+.checklist-ok p {
+  margin: 0;
+}
+.checklist-todo {
+  background: var(--warn-soft);
+  color: var(--warn-text);
+}
+.code-block {
+  display: block;
+  max-width: 100%;
+  padding: 0.5rem 0.7rem;
+  margin-bottom: 0.6rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* ---------- Forms ---------- */
+.form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--space-6);
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.form legend,
+.form-section h4 {
+  padding: 0;
+  font-weight: 600;
+  font-size: var(--fs-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 0.6rem;
+}
+.form-section {
+  margin-bottom: var(--space-5);
+}
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+  font-size: 0.925rem;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+}
+.form input,
+.form select {
+  font: inherit;
+  font-weight: 400;
+  height: 44px;
+  padding: 0 0.85rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius);
+  color: var(--text);
+  transition: border-color var(--dur-fast);
+}
+.form input[type="file"] {
+  height: auto;
+  padding: 0.6rem;
+}
+/* The --focus outline carries the 3:1 indicator; the halo is a static extra under it. */
+.form input:focus-visible,
+.form select:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+option {
+  background: var(--surface);
+  color: var(--text);
+}
+.row {
+  display: flex;
+  gap: var(--space-4);
+}
+
+/* ---------- Spinner ---------- */
+.spinner::before {
+  content: "";
+  display: inline-block;
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: 0.5rem;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  vertical-align: -0.1em;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Empty state ---------- */
+.empty {
+  text-align: center;
+  padding: var(--space-10) var(--space-6);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.empty h3 {
+  margin: 0 0 0.25rem;
+}
+.empty p {
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .header-inner {
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas:
+      "brand theme wallet"
+      "nav nav nav";
+    height: auto;
+    padding-block: var(--space-3);
+    column-gap: var(--space-4);
+    row-gap: var(--space-2);
+  }
+  .header .btn {
+    min-height: 34px;
+    padding: 0.375rem 0.85rem;
+    font-size: 0.85rem;
+  }
+}
+@media (max-width: 639px) {
+  .row {
+    flex-direction: column;
+  }
+}
+@media (max-width: 520px) {
+  .header-inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand wallet"
+      "nav theme";
+    column-gap: var(--space-3);
+  }
+}
+@media (max-width: 400px) {
+  .header-inner {
+    grid-template-areas:
+      "brand theme"
+      "wallet wallet"
+      "nav nav";
+  }
+  .wallet,
+  .wallet-connect {
+    justify-self: end;
+  }
+}
