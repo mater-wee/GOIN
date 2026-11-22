@@ -206,8 +206,8 @@
   background: var(--card-face-back);
   opacity: 0.88;
 }
-.hv-card-back .hv-mark {
-  opacity: 0.55;
+.hv-card-back .hv-logo {
+  opacity: 0.7;
 }
 .hv-card-back .hv-number {
   align-self: end;
@@ -234,18 +234,12 @@
   gap: clamp(6px, 0.8vw, 12px);
   gap: 2cqw;
 }
-.hv-mark {
-  display: grid;
-  place-items: center;
-  width: clamp(24px, 2.4vw, 36px);
-  width: 6.5cqw;
-  aspect-ratio: 1;
-  border-radius: clamp(6px, 0.5vw, 9px);
-  border-radius: 1.6cqw;
-  background: rgb(255 255 255 / 0.2);
-  font-weight: 700;
-  font-size: clamp(12px, 1.2vw, 18px);
-  font-size: 3.4cqw;
+.hv-logo {
+  display: block;
+  height: clamp(24px, 2.4vw, 36px);
+  height: 6.5cqw;
+  width: auto;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.3));
 }
 .hv-name {
   font-weight: 600;

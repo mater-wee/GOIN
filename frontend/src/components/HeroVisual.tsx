@@ -3,7 +3,7 @@ import { useId, useMemo } from "react";
 import { Icon } from "./Icon";
 
 /* Decorative hero artwork. Pure presentation: aria-hidden, no data, no props.
-   Card text is limited to the mark "G", "GOIN", "USDC", and dot groups (no numbers). */
+   Card content is limited to the GOIN logo, "GOIN", "USDC", and dot groups (no numbers). */
 
 const STARS: { top: string; left: string; opacity: number }[] = [
   { top: "6%", left: "14%", opacity: 0.6 },
@@ -33,13 +33,13 @@ export function HeroVisual() {
         ))}
       </div>
       <div className="hv-card hv-card-back">
-        <span className="hv-mark">G</span>{" "}
+        <img className="hv-logo" src="/logo.png" alt="" />{" "}
         <span className="hv-number">•••• ••••</span>
       </div>{" "}
       <div className="hv-card hv-card-front">
         <div className="hv-card-row">
           <span className="hv-brand">
-            <span className="hv-mark">G</span> <span className="hv-name">GOIN</span>
+            <img className="hv-logo" src="/logo.png" alt="" /> <span className="hv-name">GOIN</span>
           </span>{" "}
           <Icon icon={Nfc} size={22} className="hv-nfc" />
         </div>{" "}

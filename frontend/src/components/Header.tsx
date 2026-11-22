@@ -71,9 +71,7 @@ export function Header() {
       <header className="header" data-overlay={pathname === "/" && !scrolled}>
         <div className="container header-inner">
           <NavLink to="/" className="brand">
-            <span className="brand-mark" aria-hidden>
-              G
-            </span>
+            <img className="brand-logo" src="/logo.png" alt="" width={46} height={32} />
             GOIN
           </NavLink>
           <nav className="nav">
