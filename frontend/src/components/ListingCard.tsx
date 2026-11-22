@@ -9,7 +9,7 @@ import { StatusBadge } from "./ui";
 export function ListingCard({ view }: { view: ListingView }) {
   const { listing, details } = view;
   return (
-    <Link to={`/listing/${listing.id}`} className="card listing-card">
+    <Link to={`/listing/${listing.id}`} className="card listing-card" data-reveal>
       <div className="listing-card-top">
         <span className="pill">{details?.category ?? `Listing #${listing.id}`}</span>
         <StatusBadge status={listing.status.tag} />

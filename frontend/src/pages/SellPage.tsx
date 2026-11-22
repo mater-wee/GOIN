@@ -238,7 +238,7 @@ export function SellPage() {
         buyers can see the ticket.
       </p>
 
-      <form className="card form" onSubmit={(e) => void onSubmit(e)} noValidate>
+      <form className="card form" onSubmit={(e) => void onSubmit(e)} noValidate data-reveal>
         <fieldset disabled={busy}>
           <legend>1. Purchase evidence</legend>
           <label>

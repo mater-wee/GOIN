@@ -56,7 +56,7 @@ export function ActivityPage() {
         </button>
       </div>
 
-      <div className="card">
+      <div className="card" data-reveal>
         <h3>Wallet</h3>
         <p className="small">
           <ExternalLink href={accountUrl(me)}>{me}</ExternalLink>

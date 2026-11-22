@@ -1,5 +1,45 @@
-/* Motion: keyframes and animations. Keyframes animate only transform, translate, scale,
-   or opacity. Everything here is switched off under prefers-reduced-motion. */
+/* Motion: keyframes, animations, scroll reveal, and the reduced-motion overrides.
+   Keyframes animate only transform, translate, scale, or opacity. Smooth anchor scrolling
+   (no-preference only) lives in base.css. */
+
+/* ---------- Keyframes ---------- */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+@keyframes settle {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+/* The from state is the card's own transform: rotate(var(--rot)). */
+@keyframes float-back {
+  to {
+    transform: rotate(calc(var(--rot) + 1.5deg)) translateY(-10px);
+  }
+}
+@keyframes float-front {
+  to {
+    transform: rotate(calc(var(--rot) + 1deg)) translateY(-14px);
+  }
+}
+@keyframes glow-drift {
+  to {
+    transform: translate3d(-3%, 2%, 0) scale(1.06);
+  }
+}
 
 /* Star twinkle (Midnight Galaxy only, the layers are hidden elsewhere by --stars-display). */
 .stars-twinkle-a {
@@ -11,19 +51,107 @@
 .stars-bright {
   animation: twinkle 8s ease-in-out 1s infinite;
 }
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
+
+/* ---------- Hero entrance and loops ---------- */
+.hero-copy > * {
+  animation: rise var(--dur-reveal) var(--ease-out) both;
+}
+.hero-copy > :nth-child(2) {
+  animation-delay: 90ms;
+}
+.hero-copy > :nth-child(3) {
+  animation-delay: 180ms;
+}
+.hero-visual {
+  animation: settle 900ms var(--ease-out) 200ms both;
+}
+.hv-card-back {
+  animation: float-back 8s var(--ease-in-out) infinite alternate;
+}
+.hv-card-front {
+  animation: float-front 10s var(--ease-in-out) -3s infinite alternate;
+}
+.hero-glow {
+  animation: glow-drift 26s var(--ease-in-out) infinite alternate;
+}
+.hero[data-inview="false"] :is(.hv-card, .hero-glow) {
+  animation-play-state: paused;
 }
 
+/* Pointer parallax: --px/--py in [-1, 1] are written on .hero by useHeroMotion. The individual
+   translate property composes with the float transform. */
+.hv-sphere,
+.hv-card,
+.hv-planet {
+  transition: translate 600ms var(--ease-out);
+}
+.hv-sphere {
+  translate: calc(var(--px, 0) * 6px) calc(var(--py, 0) * 6px);
+}
+.hv-card-back {
+  translate: calc(var(--px, 0) * 10px) calc(var(--py, 0) * 10px);
+}
+.hv-card-front {
+  translate: calc(var(--px, 0) * 16px) calc(var(--py, 0) * 16px);
+}
+.hv-planet {
+  translate: calc(var(--px, 0) * -8px) calc(var(--py, 0) * -8px);
+}
+
+/* ---------- Scroll reveal ---------- */
+/* Hidden only once useRevealObserver has added html.reveal-on (after observing). Restates the
+   hover transitions with zero delay so only opacity/translate carry the stagger. */
+html.reveal-on [data-reveal] {
+  opacity: 0;
+  translate: 0 16px;
+  --reveal-delay: calc(var(--reveal-i, 0) * 70ms);
+  transition:
+    opacity var(--dur-reveal) var(--ease-out) var(--reveal-delay),
+    translate var(--dur-reveal) var(--ease-out) var(--reveal-delay),
+    transform var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+html.reveal-on [data-reveal][data-revealed] {
+  opacity: 1;
+  translate: 0 0;
+}
+:is(.grid, .steps) > :nth-child(1) {
+  --reveal-i: 0;
+}
+:is(.grid, .steps) > :nth-child(2) {
+  --reveal-i: 1;
+}
+:is(.grid, .steps) > :nth-child(3) {
+  --reveal-i: 2;
+}
+:is(.grid, .steps) > :nth-child(4) {
+  --reveal-i: 3;
+}
+:is(.grid, .steps) > :nth-child(5) {
+  --reveal-i: 4;
+}
+:is(.grid, .steps) > :nth-child(n + 6) {
+  --reveal-i: 5;
+}
+
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .stars {
+  .hv-card,
+  .hero-glow,
+  .stars,
+  .hero-copy > *,
+  .hero-visual {
     animation: none !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: none !important;
+  }
+  .hero-visual :is(.hv-sphere, .hv-card, .hv-planet) {
+    translate: none !important;
   }
   .btn,
   .listing-card,

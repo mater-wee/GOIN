@@ -33,7 +33,7 @@ export function ListingPage() {
 
   return (
     <div className="detail">
-      <section className="detail-main">
+      <section className="detail-main" data-reveal>
         <Link to="/" className="back">
           <Icon icon={ArrowLeft} size={16} /> All tickets
         </Link>
@@ -120,7 +120,7 @@ export function ListingPage() {
         </dl>
       </section>
 
-      <aside className="detail-side">
+      <aside className="detail-side" data-reveal>
         <div className="card">
           <h3>Progress</h3>
           <StatusTimeline status={listing.status.tag} />
